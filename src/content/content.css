@@ -1,0 +1,41 @@
+/**
+ * content.css — styles the overlay *host* element only.
+ *
+ * Everything inside the host lives in a shadow root whose styles are injected
+ * as a constructable stylesheet (immune to page CSP). This file only has to
+ * place and layer the host itself, plus register the bundled Vazirmatn font
+ * document-wide as a belt-and-braces fallback for the shadow declaration.
+ */
+
+@font-face {
+  font-family: "Vazirmatn";
+  src: url("chrome-extension://__MSG_@@extension_id__/assets/fonts/Vazirmatn.woff2") format("woff2");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+#avano-dub-host {
+  position: fixed !important;
+  top: 76px !important;
+  right: 18px !important;
+  left: auto !important;
+  z-index: 2147483647 !important;
+  display: block !important;
+  width: auto !important;
+  height: auto !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  transform: none !important;
+  pointer-events: auto !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  isolation: isolate !important;
+}
+
+/* Never let the overlay be clipped by an ancestor's overflow when the page
+   moves it around during fullscreen transitions. */
+#avano-dub-host * {
+  pointer-events: auto;
+}

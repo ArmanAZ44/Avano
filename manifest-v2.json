@@ -1,0 +1,58 @@
+{
+  "manifest_version": 2,
+  "name": "آوانو | Avano — Real-time Video Dubbing",
+  "version": "1.0.0",
+  "description": "دوبله‌ی هم‌زمان و کم‌تأخیر ویدیوهای وب با Gemini Live API. همراه با زیرنویس دوطرفه و کنترل ترکیب صدای اصلی.",
+
+  "permissions": [
+    "activeTab",
+    "storage",
+    "tabs",
+    "<all_urls>",
+    "https://generativelanguage.googleapis.com/*"
+  ],
+
+  "background": {
+    "page": "src/background/background-firefox.html",
+    "persistent": true
+  },
+
+  "browser_action": {
+    "default_title": "آوانو | Avano",
+    "default_icon": {
+      "16": "assets/icon16.png",
+      "32": "assets/icon32.png",
+      "48": "assets/icon48.png",
+      "128": "assets/icon128.png"
+    }
+  },
+
+  "options_ui": {
+    "page": "src/options/options.html",
+    "open_in_tab": true
+  },
+
+  "content_scripts": [
+    {
+      "matches": ["http://*/*", "https://*/*"],
+      "js": ["src/shared/browser-api.js", "src/content/content.js"],
+      "css": ["src/content/content.css"],
+      "run_at": "document_idle",
+      "all_frames": false
+    }
+  ],
+
+  "icons": {
+    "16": "assets/icon16.png",
+    "32": "assets/icon32.png",
+    "48": "assets/icon48.png",
+    "128": "assets/icon128.png"
+  },
+
+  "web_accessible_resources": [
+    "assets/fonts/Vazirmatn.woff2",
+    "assets/icon48.png",
+    "assets/icon128.png",
+    "src/offscreen/audio-worklets.js"
+  ]
+}

@@ -1,0 +1,263 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>تنظیمات آوانو | Avano</title>
+    <link rel="stylesheet" href="options.css" />
+  </head>
+  <body>
+    <div class="aurora"></div>
+
+    <div class="wrap">
+      <header class="hero">
+        <div class="logo">
+          <div class="bars"><i></i><i></i><i></i><i></i><i></i></div>
+        </div>
+        <div>
+          <h1>آوانو | Avano</h1>
+          <p>دوبله‌ی هم‌زمان و کم‌تأخیر ویدیوهای وب با Gemini Live API</p>
+        </div>
+      </header>
+
+      <section class="card glass starter">
+        <h2><span class="num">✓</span> شروع ساده برای کاربران تازه‌کار</h2>
+        <p class="desc">
+          فقط سه قدم کافی است: ۱) کلید Gemini را وارد کنید، ۲) ذخیره را بزنید، ۳) در صفحه‌ی ویدیو روی آیکون آوانو کلیک کنید.
+          تنظیمات پیش‌فرض برای دوبله‌ی فارسی کم‌تأخیر آماده شده‌اند.
+        </p>
+      </section>
+
+      <!-- 1. API key -->
+      <section class="card glass">
+        <h2><span class="num">۱</span> کلید API</h2>
+        <p class="desc">
+          کلید را از
+          <a href="https://aistudio.google.com/apikey" target="_blank" rel="noreferrer">Google AI Studio</a>
+          بسازید. کلید فقط در حافظه‌ی محلی مرورگر شما ذخیره می‌شود و به هیچ سروری جز
+          <code>generativelanguage.googleapis.com</code> فرستاده نمی‌شود.
+        </p>
+        <div class="inline">
+          <input id="apiKey" type="password" placeholder="AIza..." autocomplete="off" spellcheck="false" dir="ltr" />
+          <button id="toggleKey" class="btn ghost" type="button">نمایش</button>
+        </div>
+        <div class="inline">
+          <button id="testConn" class="btn" type="button">تست اتصال</button>
+          <span id="testResult" class="test-result"></span>
+        </div>
+      </section>
+
+      <!-- 2. Mode & model -->
+      <section class="card glass">
+        <h2><span class="num">۲</span> حالت دوبله</h2>
+        <p class="desc">
+          <b>ترجمه‌ی هم‌زمان</b> از مدل اختصاصی ترجمه استفاده می‌کند؛ کم‌ترین تأخیر و بالاترین
+          دقت را دارد. <b>دوبله‌ی بیانی</b> با یک مدل صوتی عمومی و پرامپت سفارشی اجرا می‌شود و
+          لحن و احساس گوینده را بهتر تقلید می‌کند.
+        </p>
+
+        <div class="field">
+          <label for="mode">حالت</label>
+          <select id="mode">
+            <option value="translate">ترجمه‌ی هم‌زمان (پیشنهادی)</option>
+            <option value="dub">دوبله‌ی بیانی</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="model">مدل ترجمه</label>
+          <input id="model" type="text" list="translateModels" spellcheck="false" dir="ltr" />
+          <datalist id="translateModels"></datalist>
+        </div>
+
+        <div class="field">
+          <label for="dubModel">مدل دوبله</label>
+          <input id="dubModel" type="text" list="dubModels" spellcheck="false" dir="ltr" />
+          <datalist id="dubModels"></datalist>
+        </div>
+      </section>
+
+      <!-- 3. Language & voice -->
+      <section class="card glass">
+        <h2><span class="num">۳</span> زبان و صدا</h2>
+        <div class="field">
+          <label for="targetLanguage">زبان مقصد</label>
+          <select id="targetLanguage"></select>
+        </div>
+        <div class="field">
+          <label for="voice">صدا</label>
+          <select id="voice"></select>
+        </div>
+        <div class="field">
+          <label for="temperature">خلاقیت لحن</label>
+          <input id="temperature" type="range" min="0" max="150" step="5" />
+          <span id="temperatureVal" class="val"></span>
+        </div>
+        <p class="hint">«خلاقیت لحن» فقط در حالت دوبله‌ی بیانی اعمال می‌شود.</p>
+      </section>
+
+      <!-- 4. Audio mix -->
+      <section class="card glass">
+        <h2><span class="num">۴</span> ترکیب صدا</h2>
+        <div class="field">
+          <label for="originalVolume">صدای اصلی</label>
+          <input id="originalVolume" type="range" min="0" max="100" step="1" />
+          <span id="originalVolumeVal" class="val"></span>
+        </div>
+        <div class="field">
+          <label for="dubVolume">صدای دوبله</label>
+          <input id="dubVolume" type="range" min="0" max="150" step="1" />
+          <span id="dubVolumeVal" class="val"></span>
+        </div>
+        <p class="hint">
+          مقدار کم برای صدای اصلی، موسیقی و افکت‌های پس‌زمینه را حفظ می‌کند در حالی که گفتار
+          با دوبله جایگزین می‌شود.
+        </p>
+        <div class="field">
+          <label>زیرنویس</label>
+          <label class="switch"><input id="showSubtitles" type="checkbox" /><span>نمایش زیرنویس روی ویدیو</span></label>
+        </div>
+        <div class="field">
+          <label>متن اصلی</label>
+          <label class="switch"><input id="showOriginalTranscript" type="checkbox" /><span>نمایش متن زبان مبدأ</span></label>
+        </div>
+      </section>
+
+      <!-- 5. Latency & audio quality -->
+      <section class="card glass">
+        <h2><span class="num">۵</span> تأخیر و کیفیت صدا</h2>
+        <p class="desc">
+          پروفایل را انتخاب کنید تا مجموعه‌ی پارامترهای تأخیر یک‌جا تنظیم شود؛ بعد می‌توانید
+          هر کدام را دستی هم تغییر دهید.
+        </p>
+
+        <div class="field">
+          <label for="latencyProfile">پروفایل تأخیر</label>
+          <select id="latencyProfile"></select>
+        </div>
+        <p id="latencyHint" class="hint"></p>
+
+        <div class="field">
+          <label for="captureFrame">اندازه‌ی بلوک ضبط</label>
+          <select id="captureFrame">
+            <option value="256">۱۶ میلی‌ثانیه — کم‌ترین تأخیر ورودی</option>
+            <option value="512">۳۲ میلی‌ثانیه — پیشنهادی</option>
+            <option value="768">۴۸ میلی‌ثانیه</option>
+            <option value="1024">۶۴ میلی‌ثانیه — کم‌ترین بار روی شبکه</option>
+          </select>
+        </div>
+        <p class="hint">
+          بلوک کوچک‌تر یعنی صدا سریع‌تر به Gemini می‌رسد؛ بلوک بزرگ‌تر تعداد پیام‌های شبکه را کم می‌کند.
+        </p>
+
+        <div class="field">
+          <label for="maxBacklogMs">سقف بافر پخش</label>
+          <input id="maxBacklogMs" type="number" min="0" max="5000" step="50" dir="ltr" />
+          <span class="unit">ms</span>
+        </div>
+        <p class="hint">
+          اگر صف پخش دوبله از این مقدار بیشتر شود، قدیمی‌ترین بخش‌ها با یک محو نرم حذف
+          می‌شوند تا دوبله از ویدیو عقب نیفتد. صفر یعنی بدون محدودیت.
+        </p>
+
+        <div class="field">
+          <label>محدودکننده‌ی نرم</label>
+          <label class="switch">
+            <input id="softLimiter" type="checkbox" />
+            <span>جلوگیری از اعوجاج در حجم بالای ۱۰۰٪ و یکنواخت‌کردن بلندی صدا</span>
+          </label>
+        </div>
+
+        <div class="field">
+          <label>گرم‌کردن اتصال</label>
+          <label class="switch">
+            <input id="prewarm" type="checkbox" />
+            <span>اتصال به Gemini هنگام باز شدن تنظیمات از قبل برقرار شود (شروع سریع‌تر)</span>
+          </label>
+        </div>
+      </section>
+
+      <!-- 6. Advanced VAD -->
+      <details class="card glass">
+        <summary><h2><span class="num">۶</span> تنظیمات پیشرفته‌ی تشخیص گفتار</h2></summary>
+        <p class="desc">فقط در حالت «دوبله‌ی بیانی» استفاده می‌شود.</p>
+        <div class="field">
+          <label for="silenceMs">سکوت پایان جمله</label>
+          <input id="silenceMs" type="number" min="100" max="3000" step="20" dir="ltr" />
+          <span class="unit">ms</span>
+        </div>
+        <p class="hint">کم‌کردن این مقدار، تأخیر دوبله را به‌طور محسوس کاهش می‌دهد.</p>
+        <div class="field">
+          <label for="prefixMs">پیش‌بافر شروع</label>
+          <input id="prefixMs" type="number" min="0" max="2000" step="10" dir="ltr" />
+          <span class="unit">ms</span>
+        </div>
+        <div class="field">
+          <label for="startSensitivity">حساسیت شروع</label>
+          <select id="startSensitivity"></select>
+        </div>
+        <div class="field">
+          <label for="endSensitivity">حساسیت پایان</label>
+          <select id="endSensitivity"></select>
+        </div>
+        <div class="field">
+          <label for="activityHandling">رفتار قطع گفتار</label>
+          <select id="activityHandling"></select>
+        </div>
+        <div class="field">
+          <label>نشست طولانی</label>
+          <label class="switch">
+            <input id="longSessionMode" type="checkbox" />
+            <span>فشرده‌سازی پنجره‌ی متن و اتصال مجدد خودکار (برای ویدیوهای بلند)</span>
+          </label>
+        </div>
+      </details>
+
+      <!-- 7. Custom prompt -->
+      <details class="card glass">
+        <summary><h2><span class="num">۷</span> پرامپت سفارشی دوبله</h2></summary>
+        <p class="desc">
+          اگر خالی بماند، پرامپت پیش‌فرض بهینه استفاده می‌شود. فقط در حالت «دوبله‌ی بیانی» اثر دارد.
+        </p>
+        <textarea id="systemInstructionOverride" rows="10" spellcheck="false" dir="ltr"
+          placeholder="You are a professional real-time dubbing engine..."></textarea>
+        <button id="resetPrompt" class="btn ghost" type="button">بازگشت به پرامپت پیش‌فرض</button>
+      </details>
+
+      <!-- 8. Network -->
+      <details class="card glass">
+        <summary><h2><span class="num">۸</span> شبکه و پروکسی</h2></summary>
+        <p class="desc">
+          به‌صورت پیش‌فرض افزونه مستقیماً به سرور Gemini وصل می‌شود. اگر شبکه‌ی شما اجازه نمی‌دهد
+          یا می‌خواهید از توکن موقت استفاده کنید، آدرس رله‌ی WebSocket خود را اینجا وارد کنید.
+        </p>
+        <div class="field">
+          <label for="proxyUrl">آدرس رله</label>
+          <input id="proxyUrl" type="text" dir="ltr" placeholder="wss://example.com/gemini-live" spellcheck="false" />
+        </div>
+        <p class="hint">
+          رله باید پیام‌های JSON را بدون تغییر منتقل کند و کوئری‌استرینگ را به سرور Gemini اضافه کند.
+        </p>
+      </details>
+
+      <div class="actions">
+        <button id="save" class="btn primary" type="button">ذخیره</button>
+        <button id="reset" class="btn ghost" type="button">بازگردانی پیش‌فرض</button>
+        <span id="savedMsg" class="saved">ذخیره شد</span>
+      </div>
+
+      <footer class="foot">
+        <div class="foot-links">
+          <a href="https://github.com/ArmanAZ44/Avano" target="_blank" rel="noreferrer">گیت‌هاب</a>
+          <span>·</span>
+          <a href="https://t.me/ArmanAZPC" target="_blank" rel="noreferrer">تلگرام</a>
+          <span>·</span>
+          <a href="https://reymit.ir/armanaz44" target="_blank" rel="noreferrer">حمایت مالی</a>
+        </div>
+        <span>آوانو | Avano · نسخه ۱.۰.۰ · ساخته‌شده با ♥ برای وب فارسی</span>
+      </footer>
+    </div>
+
+    <script type="module" src="options.js"></script>
+  </body>
+</html>
