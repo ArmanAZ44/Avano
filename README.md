@@ -50,11 +50,28 @@
 | **📊 VU متر زنده** | نمایش سطح صدای ورودی و دوبله به‌صورت زنده. |
 | **⚡ پروفایل‌های تأخیر** | چهار پروفایل از «حداکثر سرعت» تا «حداکثر کیفیت» برای تنظیم یک‌جای پارامترها. |
 | **🔥 گرم‌کردن اتصال** | اتصال WebSocket از قبل برقرار می‌شود تا با اولین کلیک، دوبله بلافاصله شروع شود. |
+| **🪟 پاپ‌آپ ساده** | یک دکمه‌ی بزرگ شروع/توقف + زبان، حالت، صدا و زیرنویس؛ بدون تنظیمات پیچیده. |
 | **🌙 پنل شناور شیشه‌ای** | طراحی Glassmorphism بنفش با فونت وزیرمتن، قابل جابه‌جایی، مقاوم در برابر CSS سایت. |
 | **🎬 نشست طولانی** | فشرده‌سازی پنجره‌ی متن + اتصال مجدد خودکار برای فیلم‌های بلند. |
 | **🌍 کراس‌براوزر** | مناسب Chrome، Edge، Brave، Opera و Firefox؛ Chrome/Chromium کامل‌ترین تجربه را دارد. |
 
 ## 🖼️ تصاویر
+
+### پاپ‌آپ افزونه (کنترل سریع)
+
+<p align="center">
+  <img src="docs/img/popup-idle.png" alt="پاپ‌آپ در حالت آماده" width="310">
+  <img src="docs/img/popup-live.png" alt="پاپ‌آپ در حالت دوبله‌ی فعال" width="310">
+</p>
+
+### پنل شناور روی ویدیو
+
+<p align="center">
+  <img src="docs/img/panel-idle.png" alt="پنل شناور" width="330">
+  <img src="docs/img/panel-live.png" alt="پنل شناور در حالت فعال" width="330">
+</p>
+
+### صفحه‌ی تنظیمات کامل
 
 <p align="center">
   <img src="docs/img/options.png" alt="صفحه تنظیمات" width="700">
@@ -85,7 +102,7 @@
 | میان‌بر | عمل |
 |---------|-----|
 | `Alt + Shift + D` | پنهان/نمایان کردن پنل |
-| کلیک روی آیکون افزونه | شروع/توقف دوبله |
+| کلیک روی آیکون افزونه | باز شدن پاپ‌آپ کنترل سریع |
 
 ## 🏗️ معماری فنی
 
@@ -107,6 +124,10 @@ Avano/
 │   ├── content/
 │   │   ├── content.js              پنل شناور + زیرنویس + کنترل ویدیو
 │   │   └── content.css             جای‌گذاری لایه‌ی پنل
+│   ├── popup/
+│   │   ├── popup.html              پاپ‌آپ کنترل سریع
+│   │   ├── popup.css
+│   │   └── popup.js
 │   └── options/
 │       ├── options.html            تنظیمات کامل
 │       ├── options.css
@@ -179,8 +200,9 @@ Gemini ──WebSocket──▶ PCM 24kHz ──▶ AudioWorklet پخش ──�
 # 🇺🇸 Avano — Real-time Video Dubbing
 
 <p align="center">
-  <img src="docs/img/panel-idle.png" alt="Avano Panel" width="340">
-  <img src="docs/img/panel-live.png" alt="Avano Panel Live" width="340">
+  <img src="docs/img/popup-idle.png" alt="Avano Popup" width="300">
+  <img src="docs/img/popup-live.png" alt="Avano Popup Live" width="300">
+  <img src="docs/img/panel-live.png" alt="Avano Panel Live" width="300">
 </p>
 
 ## ✨ Features
@@ -194,6 +216,7 @@ Gemini ──WebSocket──▶ PCM 24kHz ──▶ AudioWorklet پخش ──�
 | **📊 Live VU Meter** | Real-time visualization of input and dub audio levels. |
 | **⚡ Latency Profiles** | Four presets from "Maximum Speed" to "Maximum Quality" for one-click tuning. |
 | **🔥 Connection Prewarm** | WebSocket connection established in advance so dubbing starts instantly on click. |
+| **🪟 Simple Popup** | One big Start/Stop button plus language, mode, volume and subtitle toggles — no clutter. |
 | **🌙 Glassmorphism UI** | Purple glassmorphism design with Vazirmatn font, draggable, immune to page CSS. |
 | **🎬 Long Session Support** | Context window compression + auto-reconnect for long movies. |
 | **🌍 Cross-browser** | Built for Chrome, Edge, Brave, Opera and Firefox; Chrome/Chromium provides the most complete experience. |
@@ -229,7 +252,7 @@ Gemini ──WebSocket──▶ PCM 24kHz ──▶ AudioWorklet پخش ──�
 | Shortcut | Action |
 |----------|--------|
 | `Alt + Shift + D` | Toggle overlay visibility |
-| Click extension icon | Start / Stop dubbing |
+| Click extension icon | Open the quick-control popup |
 
 ## 🏗️ Architecture
 
@@ -251,6 +274,10 @@ Avano/
 │   ├── content/
 │   │   ├── content.js              Floating panel + subtitles + video control
 │   │   └── content.css             Host element positioning
+│   ├── popup/
+│   │   ├── popup.html              Quick-control popup
+│   │   ├── popup.css
+│   │   └── popup.js
 │   └── options/
 │       ├── options.html            Full settings page
 │       ├── options.css

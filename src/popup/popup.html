@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>آوانو | Avano</title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <div class="aurora"></div>
+
+    <header class="hdr">
+      <div class="brand">
+        <div class="logo"><div class="bars"><i></i><i></i><i></i><i></i><i></i></div></div>
+        <div class="brand-text">
+          <div class="title">آوانو | Avano</div>
+          <div class="subtitle">دوبله‌ی زنده‌ی ویدیو</div>
+        </div>
+      </div>
+      <button class="icon-btn" id="openOptions" title="تنظیمات کامل" aria-label="تنظیمات">⚙</button>
+    </header>
+
+    <main class="body">
+      <!-- status -->
+      <div class="status">
+        <span class="dot" id="dot"></span>
+        <span class="status-text" id="statusText">آماده</span>
+        <span class="chip" id="latencyChip">—</span>
+      </div>
+
+      <!-- error -->
+      <div class="err" id="err" hidden></div>
+      <!-- hint -->
+      <div class="hint" id="hint" hidden></div>
+
+      <!-- primary action -->
+      <button class="cta" id="cta">شروع دوبله</button>
+
+      <!-- quick settings -->
+      <div class="quick">
+        <div class="seg" id="modeSeg" role="tablist">
+          <button class="seg-btn active" data-mode="translate" role="tab">ترجمه‌ی هم‌زمان</button>
+          <button class="seg-btn" data-mode="dub" role="tab">دوبله‌ی بیانی</button>
+        </div>
+
+        <div class="row">
+          <span class="lbl">زبان</span>
+          <select id="lang" class="select"></select>
+        </div>
+
+        <div class="row">
+          <span class="lbl">صدای دوبله</span>
+          <input type="range" id="dubVol" min="0" max="150" step="1" />
+          <span class="val" id="dubVolVal">۱۰۰%</span>
+        </div>
+
+        <div class="row">
+          <span class="lbl">صدای اصلی</span>
+          <input type="range" id="origVol" min="0" max="100" step="1" />
+          <span class="val" id="origVolVal">۸%</span>
+        </div>
+
+        <div class="row">
+          <label class="switch">
+            <input type="checkbox" id="showSubtitles" />
+            <span>نمایش زیرنویس روی ویدیو</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- links -->
+      <div class="links">
+        <a href="https://github.com/ArmanAZ44/Avano" target="_blank" rel="noreferrer" title="گیت‌هاب">
+          <svg viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+          گیت‌هاب
+        </a>
+        <a href="https://t.me/ArmanAZPC" target="_blank" rel="noreferrer" title="تلگرام">
+          <svg viewBox="0 0 16 16"><path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.287 5.906c-.778.324-2.334.994-4.666 2.01-.378.15-.577.298-.595.442-.03.243.275.339.69.47l.175.055c.408.133.958.288 1.243.294.26.006.549-.1.868-.32 2.179-1.471 3.304-2.214 3.374-2.23.015-.003.028-.006.04.002a.5.5 0 0 1 .037.048c.04.051.065.106.065.16 0 .08-.03.16-.09.24-.27.33-.84.88-1.71 1.65-.176.153-.32.287-.43.4-.242.245-.548.537-.814.735-.34.255-.7.395-1.06.395-.23 0-.44-.06-.62-.18-.18-.12-.29-.29-.33-.5-.04-.21-.02-.46.06-.74.08-.28.2-.58.36-.9.16-.32.34-.64.54-.96.2-.32.4-.6.6-.84.2-.24.38-.42.54-.54.16-.12.3-.18.42-.18.12 0 .24.04.36.12.12.08.2.16.24.24.04.08.06.16.06.24 0 .08-.02.16-.06.24-.04.08-.1.16-.18.24-.08.08-.16.16-.24.24-.08.08-.14.16-.18.24-.04.08-.06.16-.06.24 0 .08.02.16.06.24.04.08.1.16.18.24.08.08.16.16.24.24.08.08.14.16.18.24.04.08.06.16.06.24 0 .08-.02.16-.06.24-.04.08-.1.16-.18.24-.08.08-.16.16-.24.24-.08.08-.14.16-.18.24-.04.08-.06.16-.06.24z"/></svg>
+          تلگرام
+        </a>
+        <a href="https://reymit.ir/armanaz44" target="_blank" rel="noreferrer" title="حمایت مالی">
+          <svg viewBox="0 0 16 16"><path d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"/></svg>
+          حمایت
+        </a>
+      </div>
+
+      <div class="made-with">
+        ساخته‌شده با <span class="heart">♥</span> برای وب فارسی — نسخه ۱.۰.۰
+      </div>
+    </main>
+
+    <script src="../shared/browser-api.js"></script>
+    <script type="module" src="popup.js"></script>
+  </body>
+</html>

@@ -414,6 +414,11 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
 
 /* ------------------------------------------------------------- icon click */
 
+/**
+ * Fallback for builds where the toolbar popup is unavailable (for example if
+ * `default_popup` is removed from the manifest). When the popup is present this
+ * listener never fires, because the popup owns the click.
+ */
 chrome.action.onClicked.addListener(async (tab) => {
   await readState();
   if (!tab || tab.id == null) return;
