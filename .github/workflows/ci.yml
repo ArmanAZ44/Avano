@@ -28,6 +28,12 @@ jobs:
       - name: Build packages
         run: node tools/build.mjs
 
+      - name: Install the optional AMO linter
+        run: npm install --no-audit --no-fund
+
+      - name: Lint the Firefox package exactly as addons.mozilla.org does
+        run: npm run lint:firefox
+
       - name: Inspect the produced packages
         run: |
           node -e '

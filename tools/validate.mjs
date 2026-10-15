@@ -120,6 +120,61 @@ if (versions.size > 1) {
   notes.push(`version ${[...versions][0]}`);
 }
 
+/* ------------------------------------------- 2b. AMO submission requirements */
+
+/**
+ * addons.mozilla.org rejects submissions that omit the add-on ID or the data
+ * collection declaration, so check them here rather than finding out on upload.
+ */
+const AMO_CATEGORIES = new Set([
+  'none',
+  'authenticationInfo',
+  'bookmarksInfo',
+  'browsingActivity',
+  'financialAndPaymentInfo',
+  'healthInfo',
+  'locationInfo',
+  'personalCommunications',
+  'personallyIdentifyingInfo',
+  'searchTerms',
+  'websiteActivity',
+  'websiteContent'
+]);
+
+const gecko = parsed['manifest-v2.json']?.browser_specific_settings?.gecko;
+if (parsed['manifest-v2.json']) {
+  if (!gecko) {
+    problems.push('manifest-v2.json is missing browser_specific_settings.gecko');
+  } else {
+    if (!gecko.id) {
+      problems.push('manifest-v2.json is missing browser_specific_settings.gecko.id');
+    } else if (!/^[a-zA-Z0-9-._]*@[a-zA-Z0-9-._]+$/.test(gecko.id)) {
+      problems.push(`gecko.id "${gecko.id}" is not a valid add-on ID`);
+    }
+
+    const required = gecko.data_collection_permissions?.required;
+    if (!Array.isArray(required) || required.length === 0) {
+      problems.push(
+        'manifest-v2.json needs browser_specific_settings.gecko.data_collection_permissions.required'
+      );
+    } else {
+      for (const value of required) {
+        if (!AMO_CATEGORIES.has(value)) {
+          problems.push(`unknown data collection category "${value}"`);
+        }
+      }
+      if (required.includes('none') && required.length > 1) {
+        problems.push('data collection "none" cannot be combined with other categories');
+      }
+    }
+
+    if (!gecko.strict_min_version) {
+      warnings.push('manifest-v2.json has no gecko.strict_min_version');
+    }
+    notes.push(`AMO metadata present (id ${gecko.id})`);
+  }
+}
+
 /* ------------------------------------------------- 3. referenced files exist */
 
 for (const [name, m] of Object.entries(parsed)) {

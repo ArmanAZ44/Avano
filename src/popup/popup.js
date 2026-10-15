@@ -13,6 +13,7 @@
  */
 
 import { DEFAULT_SETTINGS, LANGUAGES, LATENCY_PROFILES } from '../shared/config.js';
+import { getMediaStreamId } from '../shared/platform.js';
 
 const $ = (id) => document.getElementById(id);
 
@@ -173,7 +174,7 @@ async function start() {
     // with `null`, and the audio engine asks the user to share the tab instead.
     let streamId = null;
     try {
-      streamId = await chrome.tabCapture.getMediaStreamId({ targetTabId: tab.id });
+      streamId = await getMediaStreamId(tab.id);
     } catch (err) {
       const raw = String((err && err.message) || '');
       if (raw.includes('BROWSER_CAPTURE_REQUIRED')) {

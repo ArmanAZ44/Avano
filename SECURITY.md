@@ -11,6 +11,17 @@
 اگر شبکه‌ی شما اجازه‌ی اتصال مستقیم نمی‌دهد و «آدرس رله» را در تنظیمات پر کرده باشید،
 **کلید از همان رله عبور می‌کند** — پس فقط رله‌ی خودتان را وارد کنید.
 
+### چه چیزی از دستگاه شما خارج می‌شود
+
+| داده | مقصد | چرا |
+|------|------|-----|
+| صدای تب در حال پخش | `generativelanguage.googleapis.com` (گوگل) | برای ترجمه و ساخت صدای دوبله |
+| کلید API | همان مقصد | برای احراز هویت درخواست |
+
+هیچ داده‌ی دیگری ارسال نمی‌شود: بدون آنالیتیکس، بدون تلمتری، بدون سرور خودمان.
+همین موضوع در `manifest-v2.json` هم به‌صورت `data_collection_permissions` اعلام شده
+است — چون AMO این اعلام را اجباری می‌کند.
+
 ### گزارش آسیب‌پذیری
 
 لطفاً آسیب‌پذیری‌ها را در Issue عمومی باز نکنید. از
@@ -42,6 +53,17 @@ It is never sent anywhere except `generativelanguage.googleapis.com`, and it is 
 
 If you configured a custom **relay URL** in settings, your key passes through that relay —
 so only point it at a relay you trust.
+
+### What leaves your device
+
+| Data | Destination | Why |
+|------|-------------|-----|
+| Audio of the tab being played | `generativelanguage.googleapis.com` (Google) | To translate it and synthesise the dubbed voice |
+| The API key | Same destination | To authenticate the request |
+
+Nothing else is transmitted: no analytics, no telemetry, no server of ours.
+This is also declared in `manifest-v2.json` as `data_collection_permissions`,
+because AMO requires the declaration.
 
 ### Reporting a vulnerability
 

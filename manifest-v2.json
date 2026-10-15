@@ -4,6 +4,16 @@
   "version": "1.0.0",
   "description": "دوبله‌ی هم‌زمان و کم‌تأخیر ویدیوهای وب با Gemini Live API. همراه با زیرنویس دوطرفه و کنترل ترکیب صدای اصلی.",
 
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "avano@armanaz44.github.io",
+      "strict_min_version": "142.0",
+      "data_collection_permissions": {
+        "required": ["websiteContent"]
+      }
+    }
+  },
+
   "permissions": [
     "activeTab",
     "storage",

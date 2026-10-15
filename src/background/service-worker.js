@@ -12,6 +12,14 @@
  */
 
 import { DEFAULT_SETTINGS } from '../shared/config.js';
+import {
+  action,
+  commands,
+  scripting,
+  offscreen,
+  hasNativeTabCapture,
+  getMediaStreamId
+} from '../shared/platform.js';
 
 const OFFSCREEN_PATH = 'src/offscreen/offscreen.html';
 const OFFSCREEN_REASONS = ['USER_MEDIA', 'AUDIO_PLAYBACK'];
@@ -84,30 +92,39 @@ async function broadcastToTab(message) {
 
 /* -------------------------------------------------------------- offscreen */
 
-async function offscreenExists() {
-  if (!chrome.runtime.getContexts) return false;
-  const contexts = await chrome.runtime.getContexts({
-    contextTypes: ['OFFSCREEN_DOCUMENT']
-  });
-  return contexts.length > 0;
-}
+/**
+ * Whether the audio engine document is up.
+ *
+ * Tracked locally rather than with `runtime.getContexts`, which is Manifest V3
+ * only and therefore unavailable in the Firefox build. If the worker is
+ * evicted while the document stays alive, `createDocument` reports that a
+ * document already exists — we treat that as success, and the retry loop in
+ * `sendToOffscreen` covers any remaining timing gap.
+ */
+let offscreenReady = false;
 
 async function ensureOffscreen() {
-  if (await offscreenExists()) return;
+  if (offscreenReady) return;
   if (creatingOffscreen) {
     await creatingOffscreen;
     return;
   }
-  creatingOffscreen = chrome.offscreen
+  creatingOffscreen = offscreen
     .createDocument({
       url: OFFSCREEN_PATH,
       reasons: OFFSCREEN_REASONS,
       justification: OFFSCREEN_JUSTIFICATION
     })
+    .then(() => {
+      offscreenReady = true;
+    })
     .catch((err) => {
-      if (!String(err && err.message).includes('Only a single offscreen')) {
-        console.warn('[avano] createDocument failed:', err);
+      const message = String(err && err.message);
+      if (message.includes('Only a single offscreen') || message.includes('already exists')) {
+        offscreenReady = true;
+        return;
       }
+      console.warn('[avano] createDocument failed:', err);
     })
     .finally(() => {
       creatingOffscreen = null;
@@ -130,12 +147,13 @@ async function sendToOffscreen(message, { retries = 25, delayMs = 80 } = {}) {
 }
 
 async function closeOffscreen() {
-  if (!(await offscreenExists())) return;
+  if (!offscreenReady) return;
   try {
-    await chrome.offscreen.closeDocument();
+    await offscreen.closeDocument();
   } catch {
     /* ignore */
   }
+  offscreenReady = false;
 }
 
 /* ------------------------------------------------------------------ flows */
@@ -148,11 +166,11 @@ async function ensureContentScript(tabId) {
     /* not injected yet */
   }
   try {
-    await chrome.scripting.insertCSS({
+    await scripting.insertCSS({
       target: { tabId },
       files: ['src/content/content.css']
     });
-    await chrome.scripting.executeScript({
+    await scripting.executeScript({
       target: { tabId },
       files: ['src/content/content.js']
     });
@@ -174,9 +192,8 @@ async function handleStart(msg) {
     return { ok: false, error: 'NO_API_KEY' };
   }
   // Browsers without native tab capture (Firefox) do not hand us a stream id;
-  // the offscreen document asks the user to share the tab instead.
-  const nativeTabCapture = !chrome.tabCapture || chrome.tabCapture.__avanoNative !== false;
-  if (!streamId && nativeTabCapture) {
+  // the audio engine asks the user to share the tab instead.
+  if (!streamId && hasNativeTabCapture()) {
     await writeState({
       active: false,
       status: 'error',
@@ -337,16 +354,16 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
           sendResponse({ ok: false, error: 'کلید API تنظیم نشده است. تنظیمات را باز کنید.' });
           return;
         }
-        let streamId;
+        let streamId = null;
         try {
-          streamId = await chrome.tabCapture.getMediaStreamId({ targetTabId: tabId });
+          streamId = await getMediaStreamId(tabId);
         } catch (err) {
-          sendResponse({
-            ok: false,
-            error: 'NEED_TOOLBAR_CLICK',
-            detail: String(err && err.message)
-          });
-          return;
+          const raw = String((err && err.message) || '');
+          if (!raw.includes('BROWSER_CAPTURE_REQUIRED')) {
+            sendResponse({ ok: false, error: 'NEED_TOOLBAR_CLICK', detail: raw });
+            return;
+          }
+          // Firefox: no tab capture, so the engine asks for tab sharing.
         }
         const res = await handleStart({ tabId, streamId, settings: merged });
         sendResponse(res);
@@ -490,10 +507,9 @@ async function toggleDubbingOnTab(tab) {
   }
 
   let streamId = null;
-  const nativeTabCapture = !chrome.tabCapture || chrome.tabCapture.__avanoNative !== false;
-  if (nativeTabCapture) {
+  if (hasNativeTabCapture()) {
     try {
-      streamId = await chrome.tabCapture.getMediaStreamId({ targetTabId: tab.id });
+      streamId = await getMediaStreamId(tab.id);
     } catch (err) {
       await ensureContentScript(tab.id);
       await writeState({
@@ -517,9 +533,11 @@ async function toggleDubbingOnTab(tab) {
  * `default_popup` is removed from the manifest). When the popup is present this
  * listener never fires, because the popup owns the click.
  */
-chrome.action.onClicked.addListener((tab) => {
-  toggleDubbingOnTab(tab);
-});
+if (action) {
+  action.onClicked.addListener((tab) => {
+    toggleDubbingOnTab(tab);
+  });
+}
 
 /* ---------------------------------------------------------- shortcuts */
 
@@ -528,8 +546,8 @@ chrome.action.onClicked.addListener((tab) => {
  * by the browser itself (they open the popup), so only the custom commands
  * arrive here.
  */
-if (chrome.commands && chrome.commands.onCommand) {
-  chrome.commands.onCommand.addListener(async (command) => {
+if (commands && commands.onCommand) {
+  commands.onCommand.addListener(async (command) => {
     if (command === 'toggle-dubbing') {
       const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
       await toggleDubbingOnTab(tab);

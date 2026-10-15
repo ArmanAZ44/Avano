@@ -1,6 +1,10 @@
 # Build output
 dist/
 
+# Optional dev dependency (addons-linter)
+node_modules/
+package-lock.json
+
 # OS / editor cruft
 .DS_Store
 Thumbs.db

@@ -158,6 +158,28 @@
 
 > **درباره‌ی Firefox:** این مرورگر `tabCapture` ندارد، پس آوانو به‌جای آن پنجره‌ی اشتراک‌گذاری تب را باز می‌کند. در آن پنجره تب را انتخاب کنید و **گزینه‌ی «اشتراک صدای تب» را تیک بزنید**، وگرنه صدایی دریافت نمی‌شود. Chrome/Chromium بهترین تجربه را می‌دهد چون صدای تب را بدون هیچ پنجره‌ی اضافه‌ای می‌گیرد.
 
+### الزامات ارسال به addons.mozilla.org
+
+`manifest-v2.json` این کلیدها را اعلام می‌کند، چون AMO بدون آن‌ها افزونه را رد می‌کند:
+
+| کلید | مقدار | چرا |
+|------|-------|-----|
+| `browser_specific_settings.gecko.id` | `avano@armanaz44.github.io` | شناسه‌ی افزونه؛ برای امضا لازم است |
+| `gecko.strict_min_version` | `142.0` | قدیمی‌ترین نسخه‌ای که اعلام جمع‌آوری داده را می‌فهمد |
+| `gecko.data_collection_permissions.required` | `["websiteContent"]` | صدای تب برای ترجمه به Gemini گوگل فرستاده می‌شود |
+
+> اگر این پروژه را فورک می‌کنید و مسیر داده را تغییر می‌دهید، این اعلام را هم به‌روز کنید — اعلام نادرست باعث رد شدن در AMO می‌شود.
+
+برای بررسی پیش از ارسال:
+
+```bash
+npm install          # فقط بار اول، برای addons-linter
+npm run build
+npm run lint:firefox
+```
+
+خروجی مطلوب `0 errors, 0 warnings` است.
+
 <a name="fa-shortcuts"></a>
 ## ⌨️ میان‌برها
 
@@ -187,7 +209,8 @@ Avano/
 ├── src/
 │   ├── shared/
 │   │   ├── config.js               تنظیمات، زبان‌ها، سازنده‌ی پیام‌های Gemini
-│   │   └── browser-api.js          پلی‌فیل کراس‌براوزر
+│   │   ├── platform.js             حل APIهای مخصوص هر مرورگر در زمان اجرا
+│   │   └── browser-api.js          پلی‌فیل کراس‌براوزر برای فایرفاکس
 │   ├── background/
 │   │   ├── service-worker.js       چرخه‌ی عمر، مسیریابی، میان‌برها، لاگ زیرنویس
 │   │   └── background-firefox.html میزبان background در فایرفاکس (MV2)
@@ -202,7 +225,8 @@ Avano/
 │   └── options/                    تنظیمات کامل (html / css / js)
 ├── tools/
 │   ├── build.mjs                    ساخت بسته‌ی کروم (zip) و فایرفاکس (xpi)
-│   ├── validate.mjs                 بررسی سورس، manifestها، آیکون‌ها، تصاویر
+│   ├── validate.mjs                 بررسی سورس، manifestها، آیکون‌ها، تصاویر، الزامات AMO
+│   ├── lint-firefox.mjs             اجرای بازرس رسمی addons.mozilla.org
 │   └── make_icons.py                تولید آیکون بدون وابستگی
 └── docs/img/                        تصاویر و اسکرین‌شات‌ها
 ```
@@ -333,7 +357,10 @@ node tools/build.mjs        # ساخت dist/Avano-<version>-chrome.zip و -firef
 |-------|-----|
 | `npm run check` | اعتبارسنجی کامل (`--strict` برای CI) |
 | `npm run build` | ساخت هر دو بسته در `dist/` |
+| `npm run lint:firefox` | اجرای دقیق همان بازرس addons.mozilla.org روی فایل xpi |
 | `npm test` | همان اعتبارسنجی |
+
+`npm run lint:firefox` به `addons-linter` نیاز دارد که یک وابستگی توسعه‌ی اختیاری است — یک‌بار `npm install` بزنید. این همان بازرسی است که AMO هنگام ارسال انجام می‌دهد، پس ایرادهای رد شدن (شناسه‌ی افزونه، اعلام جمع‌آوری داده، APIهای پشتیبانی‌نشده، `innerHTML` ناایمن) پیش از آپلود گرفته می‌شوند.
 
 ### اسناد پروژه
 
@@ -497,6 +524,28 @@ Create a key at [Google AI Studio](https://aistudio.google.com/apikey) and paste
 
 > **About Firefox:** Firefox has no `tabCapture`, so Avano opens the share dialog instead. Pick the tab there and **tick "Share tab audio"** — otherwise no audio is captured. Chrome/Chromium gives the smoothest experience because it captures tab audio with no extra dialog.
 
+### addons.mozilla.org submission requirements
+
+`manifest-v2.json` declares these keys because AMO rejects a submission without them:
+
+| Key | Value | Why |
+|-----|-------|-----|
+| `browser_specific_settings.gecko.id` | `avano@armanaz44.github.io` | Add-on ID, required for signing |
+| `gecko.strict_min_version` | `142.0` | Oldest version that understands the data declaration |
+| `gecko.data_collection_permissions.required` | `["websiteContent"]` | Captured tab audio is sent to Google's Gemini API for translation |
+
+> If you fork this and change what the extension transmits, update that declaration too — an inaccurate one is a submission blocker.
+
+To check before uploading:
+
+```bash
+npm install          # once, for addons-linter
+npm run build
+npm run lint:firefox
+```
+
+The expected result is `0 errors, 0 warnings`.
+
 <a name="en-shortcuts"></a>
 ## ⌨️ Shortcuts
 
@@ -526,7 +575,8 @@ Avano/
 ├── src/
 │   ├── shared/
 │   │   ├── config.js               Settings, languages, Gemini message builder
-│   │   └── browser-api.js          Cross-browser polyfill
+│   │   ├── platform.js             Resolves browser-specific APIs at runtime
+│   │   └── browser-api.js          Cross-browser polyfill for Firefox
 │   ├── background/
 │   │   ├── service-worker.js       Lifecycle, routing, shortcuts, transcript log
 │   │   └── background-firefox.html Firefox MV2 background host
@@ -541,7 +591,8 @@ Avano/
 │   └── options/                    Full settings page (html / css / js)
 ├── tools/
 │   ├── build.mjs                   Builds the Chrome zip and the Firefox xpi
-│   ├── validate.mjs                Checks sources, manifests, icons, images
+│   ├── validate.mjs                Checks sources, manifests, icons, images, AMO rules
+│   ├── lint-firefox.mjs            Runs addons.mozilla.org's own validator
 │   └── make_icons.py               Dependency-free icon generator
 └── docs/img/                        Screenshots & images
 ```
@@ -666,13 +717,16 @@ node tools/validate.mjs     # check sources, manifests, icons and README images
 node tools/build.mjs        # build dist/Avano-<version>-chrome.zip and -firefox.xpi
 ```
 
-Requires **Node.js 18+**. There are no npm dependencies — the ZIP writer is built on `node:zlib`.
+Requires **Node.js 18+**. The extension itself has no npm dependencies — the ZIP writer is built on `node:zlib`; only the optional AMO linter is installed via npm.
 
 | Command | What it does |
 |---------|--------------|
 | `npm run check` | Full validation (`--strict` for CI) |
 | `npm run build` | Build both packages into `dist/` |
+| `npm run lint:firefox` | Run addons.mozilla.org's own validator over the xpi |
 | `npm test` | Alias for the validation run |
+
+`npm run lint:firefox` needs `addons-linter`, an optional dev dependency — run `npm install` once. It is the same validator AMO runs on submission, so it catches the things that get an upload rejected (add-on ID, data collection declaration, unsupported APIs, unsafe `innerHTML`) before you upload.
 
 ### Project docs
 

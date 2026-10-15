@@ -30,6 +30,10 @@
   "scripts": {
     "build": "node tools/build.mjs",
     "check": "node tools/validate.mjs",
+    "lint:firefox": "node tools/lint-firefox.mjs",
     "test": "node tools/validate.mjs"
+  },
+  "devDependencies": {
+    "addons-linter": "^10.13.0"
   }
 }

@@ -1,122 +1,169 @@
 /**
  * browser-api.js — cross-browser compatibility shim.
  *
- * Unifies chrome.* and browser.* namespaces and polyfills APIs that differ
- * between Chromium (MV3) and Firefox (MV2).
+ * Unifies the `chrome.*` and `browser.*` namespaces and fills in the APIs that
+ * differ between Chromium (MV3) and Firefox (MV2).
  *
- * Usage: import this module before any code that touches extension APIs.
+ * Important: Firefox exposes `browser` (promise based) and `chrome` (callback
+ * based) as **two distinct objects**. The rest of the code consistently calls
+ * `chrome.*`, so every shim has to be installed on both namespaces and the
+ * callback namespace has to be promisified — writing to only one of them is a
+ * classic reason cross-browser extensions work in Chromium and silently break
+ * in Firefox.
+ *
+ * Load this as a classic script before any module that touches extension APIs.
  */
 
 (function () {
-  if (window.__avanoBrowserShim) return;
-  window.__avanoBrowserShim = true;
+  const g = globalThis;
+  if (g.__avanoBrowserShim) return;
+  g.__avanoBrowserShim = true;
 
-  const root = typeof browser !== 'undefined' ? browser : chrome;
+  const hasBrowserNs = typeof browser !== 'undefined';
+  const hasChromeNs = typeof chrome !== 'undefined';
 
-  // Expose a Chrome-compatible namespace for code that uses chrome.*.
-  // Firefox provides browser.* first; this keeps the rest of the code small.
-  if (typeof window.chrome === 'undefined') {
-    window.chrome = root;
-  }
+  const targets = [];
+  if (hasBrowserNs) targets.push(browser);
+  if (hasChromeNs && chrome !== browser) targets.push(chrome);
+  if (!targets.length) return;
 
-  // --- tabCapture polyfill (Firefox does not have chrome.tabCapture) ---
-  // The flag lets callers tell "real tab capture" apart from the shim, so they
-  // know whether a missing stream id is a bug or simply this browser's design.
-  if (root.tabCapture) {
-    root.tabCapture.__avanoNative = true;
-  } else {
-    root.tabCapture = {
+  // Anything reading `chrome` should still find something in Firefox.
+  if (!hasChromeNs) g.chrome = targets[0];
+
+  // Firefox's `chrome` is the callback-based twin of `browser`.
+  const callbackNs = hasBrowserNs && hasChromeNs && chrome !== browser ? chrome : null;
+
+  /* --------------------------------------------------------------- shims */
+
+  function installTabCapture(ns) {
+    if (ns.tabCapture) {
+      // Real tab capture: mark it so callers can tell it apart from the shim.
+      ns.tabCapture.__avanoNative = true;
+      return;
+    }
+    ns.tabCapture = {
       __avanoNative: false,
-      async getMediaStreamId() {
-        // No tab capture here: the offscreen document falls back to
-        // getDisplayMedia, where the user picks the tab and enables "Share
-        // audio". Signal that so the caller can proceed without a stream id.
-        throw new Error('BROWSER_CAPTURE_REQUIRED');
+      getMediaStreamId() {
+        // No tab capture here. The audio engine falls back to getDisplayMedia,
+        // where the user picks the tab and enables "Share audio".
+        return Promise.reject(new Error('BROWSER_CAPTURE_REQUIRED'));
       }
     };
   }
 
-  // --- offscreen polyfill (Firefox MV2 uses a background page instead) ---
-  if (!root.offscreen) {
-    root.offscreen = {
+  function installOffscreen(ns) {
+    if (ns.offscreen) return;
+    ns.offscreen = {
       async createDocument({ url }) {
-        // In Firefox MV2 the background page is persistent and has DOM access,
-        // so we load the offscreen HTML in a hidden iframe inside the background.
-        const iframe = document.createElement('iframe');
-        iframe.src = url;
-        iframe.style.cssText = 'position:fixed;width:0;height:0;border:0;visibility:hidden;';
-        document.body.appendChild(iframe);
-        // Store reference for later cleanup.
-        root.__avanoOffscreenFrame = iframe;
-        return Promise.resolve();
+        // A persistent MV2 background page has DOM access, so the audio engine
+        // can live in a hidden iframe instead of an offscreen document.
+        if (typeof document === 'undefined') return;
+        if (g.__avanoOffscreenFrame) return;
+        const frame = document.createElement('iframe');
+        frame.src = url;
+        frame.style.cssText =
+          'position:fixed;width:0;height:0;border:0;visibility:hidden;';
+        document.body.appendChild(frame);
+        g.__avanoOffscreenFrame = frame;
       },
       async closeDocument() {
-        if (root.__avanoOffscreenFrame) {
-          try { root.__avanoOffscreenFrame.remove(); } catch { /* ignore */ }
-          root.__avanoOffscreenFrame = null;
+        const frame = g.__avanoOffscreenFrame;
+        if (!frame) return;
+        try {
+          frame.remove();
+        } catch {
+          /* ignore */
         }
-        return Promise.resolve();
+        g.__avanoOffscreenFrame = null;
       }
     };
   }
 
-  // --- scripting polyfill (Firefox MV2 uses tabs.executeScript) ---
-  if (!root.scripting) {
-    root.scripting = {
+  function installScripting(ns) {
+    if (ns.scripting) return;
+    ns.scripting = {
       async executeScript({ target, files }) {
-        for (const f of files || []) {
-          await root.tabs.executeScript(target.tabId, { file: f });
+        for (const file of files || []) {
+          await ns.tabs.executeScript(target.tabId, { file });
         }
       },
       async insertCSS({ target, files }) {
-        for (const f of files || []) {
-          await root.tabs.insertCSS(target.tabId, { file: f });
+        for (const file of files || []) {
+          await ns.tabs.insertCSS(target.tabId, { file });
         }
       }
     };
   }
 
-  // --- getContexts polyfill (MV3 only) ---
-  if (!root.runtime.getContexts) {
-    root.runtime.getContexts = async () => [];
+  function installRuntime(ns) {
+    if (ns.runtime && !ns.runtime.getContexts) {
+      ns.runtime.getContexts = async () => [];
+    }
   }
 
-  // --- storage.session polyfill (MV3 only; fallback to local) ---
-  if (!root.storage || !root.storage.session) {
-    if (!root.storage) root.storage = {};
-    root.storage.session = root.storage.local;
+  function installStorage(ns) {
+    if (ns.storage && !ns.storage.session) {
+      // MV3 only; the local store is a fine fallback for the small state blob
+      // we keep there.
+      ns.storage.session = ns.storage.local;
+    }
   }
 
-  // --- action vs browserAction unification ---
-  if (!root.action && root.browserAction) {
-    root.action = root.browserAction;
+  function installAction(ns) {
+    if (!ns.action && ns.browserAction) ns.action = ns.browserAction;
   }
 
-  // --- Promisify APIs that still use callbacks in some browsers ---
-  function promisify(api, method) {
-    const orig = api && api[method];
-    if (!orig || orig.__promisified) return;
-    api[method] = function (...args) {
+  for (const ns of targets) {
+    installTabCapture(ns);
+    installOffscreen(ns);
+    installScripting(ns);
+    installRuntime(ns);
+    installStorage(ns);
+    installAction(ns);
+  }
+
+  /* ---------------------------------------------------------- promisify */
+
+  function promisify(ns, path) {
+    const parts = path.split('.');
+    let owner = ns;
+    for (let i = 0; i < parts.length - 1; i++) {
+      owner = owner && owner[parts[i]];
+    }
+    const method = parts[parts.length - 1];
+    if (!owner || typeof owner[method] !== 'function' || owner[method].__avanoPromisified) {
+      return;
+    }
+    const original = owner[method];
+    const wrapped = function (...args) {
       return new Promise((resolve, reject) => {
-        orig.call(api, ...args, (res) => {
-          if (root.runtime.lastError) {
-            reject(new Error(root.runtime.lastError.message));
-          } else {
-            resolve(res);
-          }
+        original.call(owner, ...args, (result) => {
+          const err = ns.runtime && ns.runtime.lastError;
+          if (err) reject(new Error(err.message || String(err)));
+          else resolve(result);
         });
       });
     };
-    api[method].__promisified = true;
+    wrapped.__avanoPromisified = true;
+    owner[method] = wrapped;
   }
 
-  // Firefox still uses callbacks for some tabs APIs in MV2.
-  if (root.tabs) {
-    promisify(root.tabs, 'executeScript');
-    promisify(root.tabs, 'insertCSS');
-    promisify(root.tabs, 'sendMessage');
+  if (callbackNs) {
+    const CALLBACK_METHODS = [
+      'storage.local.get',
+      'storage.local.set',
+      'storage.local.remove',
+      'storage.session.get',
+      'storage.session.set',
+      'tabs.query',
+      'tabs.get',
+      'tabs.sendMessage',
+      'tabs.executeScript',
+      'tabs.insertCSS',
+      'runtime.sendMessage'
+    ];
+    for (const path of CALLBACK_METHODS) promisify(callbackNs, path);
   }
 
-  // Expose a unified namespace for convenience.
-  window.avano = { browser: root };
+  g.avano = { browser: targets[0] };
 })();

@@ -44,9 +44,22 @@ node tools/build.mjs        # ساخت بسته‌ها در dist/
 ```bash
 node tools/validate.mjs --strict
 node tools/build.mjs
+npm install            # فقط بار اول، برای addons-linter
+npm run lint:firefox   # همان بازرس AMO — باید 0 errors, 0 warnings بدهد
 ```
 
 اگر رابط کاربری را عوض کردید، اسکرین‌شات‌های `docs/img/` را به‌روز کنید (اسکریپت‌های رندر در پوشه‌ی `.shots/` نمونه دارند).
+
+### قواعد مربوط به فایرفاکس
+
+این‌ها باعث رد شدن افزونه در addons.mozilla.org می‌شوند، پس `validate.mjs` هم آن‌ها را چک می‌کند:
+
+- `browser_specific_settings.gecko.id` باید وجود داشته باشد.
+- `gecko.data_collection_permissions.required` باید پر باشد. اگر مسیر داده را عوض کردید،
+  این اعلام را هم به‌روز کنید.
+- مقدار پویا داخل `innerHTML` نگذارید؛ از `textContent` و `setAttribute` استفاده کنید.
+- APIهای مخصوص کروم (`tabCapture`، `offscreen`، `action`، `runtime.getContexts`) را
+  مستقیم صدا نزنید؛ از `src/shared/platform.js` رد شوید.
 
 ### نسخه‌گذاری
 
@@ -94,9 +107,22 @@ Requires Node.js 18+. There are no npm dependencies.
 ```bash
 node tools/validate.mjs --strict
 node tools/build.mjs
+npm install            # once, for addons-linter
+npm run lint:firefox   # AMO's own validator — should report 0 errors, 0 warnings
 ```
 
 If you changed the UI, refresh the screenshots in `docs/img/` (the `.shots/` folder has example render scripts).
+
+### Firefox-specific rules
+
+These get an upload rejected on addons.mozilla.org, so `validate.mjs` checks them too:
+
+- `browser_specific_settings.gecko.id` must be present.
+- `gecko.data_collection_permissions.required` must be filled in. If you change what the
+  extension transmits, update the declaration as well.
+- Never put a dynamic value in `innerHTML`; use `textContent` and `setAttribute`.
+- Do not call Chromium-only APIs (`tabCapture`, `offscreen`, `action`, `runtime.getContexts`)
+  directly — go through `src/shared/platform.js`.
 
 ### Versioning
 
