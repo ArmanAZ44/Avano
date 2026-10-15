@@ -33,6 +33,13 @@
       <!-- hint -->
       <div class="hint" id="hint" hidden></div>
 
+      <!-- live stats -->
+      <div class="stats" id="stats" hidden>
+        <span class="stat"><b id="statLatency">—</b><i>تأخیر</i></span>
+        <span class="stat"><b id="statBacklog">—</b><i>بافر</i></span>
+        <span class="stat"><b id="statReconnects">۰</b><i>اتصال مجدد</i></span>
+      </div>
+
       <!-- primary action -->
       <button class="cta" id="cta">شروع دوبله</button>
 
@@ -46,6 +53,11 @@
         <div class="row">
           <span class="lbl">زبان</span>
           <select id="lang" class="select"></select>
+        </div>
+
+        <div class="row">
+          <span class="lbl">سرعت</span>
+          <select id="profile" class="select"></select>
         </div>
 
         <div class="row">
@@ -65,6 +77,12 @@
             <input type="checkbox" id="showSubtitles" />
             <span>نمایش زیرنویس روی ویدیو</span>
           </label>
+        </div>
+
+        <div class="mini-row">
+          <button class="mini" id="exportSubs" type="button">ذخیره‌ی زیرنویس</button>
+          <button class="mini" id="clearSubs" type="button">پاک کردن</button>
+          <span class="mini-note" id="subsNote"></span>
         </div>
       </div>
 

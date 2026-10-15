@@ -181,6 +181,38 @@ body.live .logo .bars i { animation-duration: .62s; }
   padding: 7px 10px;
 }
 
+/* ----------------------------------------------------------------- stats */
+
+.stats {
+  display: flex;
+  gap: 6px;
+}
+
+.stat {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+  padding: 6px 4px;
+  border-radius: 11px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(196, 181, 253, 0.12);
+}
+
+.stat b {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: #e9d5ff;
+  font-variant-numeric: tabular-nums;
+}
+
+.stat i {
+  font-style: normal;
+  font-size: 9.5px;
+  color: var(--muted-2);
+}
+
 /* ------------------------------------------------------------------- CTA */
 
 .cta {
@@ -316,6 +348,41 @@ input[type="range"]::-moz-range-thumb {
   flex: 1;
 }
 .switch input { accent-color: var(--violet); width: 15px; height: 15px; cursor: pointer; flex: none; }
+
+.mini-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.mini {
+  border: 1px solid rgba(196, 181, 253, 0.18);
+  background: rgba(255, 255, 255, 0.05);
+  color: #ddd6fe;
+  border-radius: 9px;
+  padding: 5px 10px;
+  font-family: inherit;
+  font-size: 10.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background .16s, border-color .16s, color .16s;
+}
+.mini:hover {
+  background: rgba(168, 85, 247, 0.22);
+  border-color: rgba(216, 180, 254, 0.4);
+  color: #fff;
+}
+.mini[disabled] { opacity: .5; cursor: default; }
+
+.mini-note {
+  flex: 1;
+  text-align: left;
+  font-size: 10px;
+  color: var(--green);
+  opacity: 0;
+  transition: opacity .25s;
+}
+.mini-note.show { opacity: 1; }
 
 /* ---------------------------------------------------------------- links */
 

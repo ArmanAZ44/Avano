@@ -20,17 +20,17 @@
   }
 
   // --- tabCapture polyfill (Firefox does not have chrome.tabCapture) ---
-  if (!root.tabCapture) {
+  // The flag lets callers tell "real tab capture" apart from the shim, so they
+  // know whether a missing stream id is a bug or simply this browser's design.
+  if (root.tabCapture) {
+    root.tabCapture.__avanoNative = true;
+  } else {
     root.tabCapture = {
-      async getMediaStreamId({ targetTabId } = {}) {
-        // Firefox: use getDisplayMedia as a fallback. This requires user
-        // interaction and will show a picker. Not ideal, but the closest
-        // equivalent without native tabCapture.
-        const tab = await root.tabs.get(targetTabId);
-        if (!tab || !tab.url) {
-          throw new Error('tabCapture is not available in this browser.');
-        }
-        // Signal to the caller that manual capture is required.
+      __avanoNative: false,
+      async getMediaStreamId() {
+        // No tab capture here: the offscreen document falls back to
+        // getDisplayMedia, where the user picks the tab and enables "Share
+        // audio". Signal that so the caller can proceed without a stream id.
         throw new Error('BROWSER_CAPTURE_REQUIRED');
       }
     };

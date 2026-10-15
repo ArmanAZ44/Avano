@@ -883,6 +883,10 @@
         sendResponse({ ok: true });
         return true;
 
+      case 'CS_TOGGLE_OVERLAY':
+        toggleOverlay();
+        return;
+
       case 'CS_ACTIVE':
         state.active = !!msg.active;
         if (!state.active) {
@@ -1027,14 +1031,14 @@
       true
     );
 
-    window.addEventListener('keydown', (e) => {
-      if (e.altKey && e.shiftKey && (e.key === 'D' || e.key === 'd')) {
-        e.preventDefault();
-        state.hidden = host.style.display !== 'none';
-        host.style.display = state.hidden ? 'none' : '';
-        saveSettings();
-      }
-    });
+  }
+
+  /** Show/hide the panel. Triggered by the `Alt+Shift+O` command. */
+  function toggleOverlay() {
+    if (!host) return;
+    state.hidden = host.style.display !== 'none';
+    host.style.display = state.hidden ? 'none' : '';
+    saveSettings();
   }
 
   if (document.readyState === 'loading') {

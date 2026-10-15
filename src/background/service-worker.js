@@ -173,7 +173,10 @@ async function handleStart(msg) {
     await broadcastState();
     return { ok: false, error: 'NO_API_KEY' };
   }
-  if (!streamId) {
+  // Browsers without native tab capture (Firefox) do not hand us a stream id;
+  // the offscreen document asks the user to share the tab instead.
+  const nativeTabCapture = !chrome.tabCapture || chrome.tabCapture.__avanoNative !== false;
+  if (!streamId && nativeTabCapture) {
     await writeState({
       active: false,
       status: 'error',
@@ -187,6 +190,7 @@ async function handleStart(msg) {
     await stopSession('switching-tab');
   }
 
+  resetTranscript();
   await writeState({
     active: true,
     tabId,
@@ -263,6 +267,44 @@ async function pushSettingsToOffscreen(settings) {
   } catch {
     /* ignore */
   }
+}
+
+/* ------------------------------------------------------------- transcript */
+
+/**
+ * Rolling transcript kept in memory only, so the popup can export the session
+ * as a text file. Bounded by character count to keep the worker light.
+ */
+const transcript = { lines: [], chars: 0 };
+const TRANSCRIPT_MAX_CHARS = 200000;
+
+function appendTranscript(input, output) {
+  if (!input && !output) return;
+  transcript.lines.push({ t: Date.now(), input, output });
+  transcript.chars += input.length + output.length;
+  while (transcript.chars > TRANSCRIPT_MAX_CHARS && transcript.lines.length > 1) {
+    const dropped = transcript.lines.shift();
+    transcript.chars -= dropped.input.length + dropped.output.length;
+  }
+}
+
+function resetTranscript() {
+  transcript.lines = [];
+  transcript.chars = 0;
+}
+
+function transcriptText() {
+  const pad = (n) => String(n).padStart(2, '0');
+  return transcript.lines
+    .map((line) => {
+      const d = new Date(line.t);
+      const stamp = `${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
+      const parts = [];
+      if (line.input) parts.push(line.input.trim());
+      if (line.output) parts.push(line.output.trim());
+      return `[${stamp}] ${parts.join('\n          ')}`;
+    })
+    .join('\n');
 }
 
 /* --------------------------------------------------------------- routing */
@@ -352,6 +394,15 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       sendResponse({ ok: true });
       return true;
 
+    case 'GET_TRANSCRIPT':
+      sendResponse({ ok: true, text: transcriptText(), lines: transcript.lines.length });
+      return true;
+
+    case 'CLEAR_TRANSCRIPT':
+      resetTranscript();
+      sendResponse({ ok: true });
+      return true;
+
     case 'CS_VIDEO_STATE':
       chrome.runtime
         .sendMessage({
@@ -382,6 +433,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       return;
 
     case 'DUB_TRANSCRIPT':
+      appendTranscript(msg.input || '', msg.output || '');
       broadcastToTab({
         type: 'CS_TRANSCRIPT',
         input: msg.input || '',
@@ -412,24 +464,19 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
   }
 });
 
-/* ------------------------------------------------------------- icon click */
+/* ------------------------------------------------------- start from a tab */
 
 /**
- * Fallback for builds where the toolbar popup is unavailable (for example if
- * `default_popup` is removed from the manifest). When the popup is present this
- * listener never fires, because the popup owns the click.
+ * Start dubbing the given tab, or stop it when that tab is already live.
+ * Shared by the toolbar icon, the keyboard shortcut and the in-page overlay.
  */
-chrome.action.onClicked.addListener(async (tab) => {
+async function toggleDubbingOnTab(tab) {
   await readState();
-  if (!tab || tab.id == null) return;
+  if (!tab || tab.id == null) return { ok: false, error: 'NO_TAB' };
 
-  // If already active on this tab, stop.
   if (state.active && state.tabId === tab.id) {
-    await stopSession('user');
-    return;
+    return stopSession('user');
   }
-
-  // If active on a different tab, switch.
   if (state.active && state.tabId !== tab.id) {
     await stopSession('switching-tab');
   }
@@ -439,26 +486,63 @@ chrome.action.onClicked.addListener(async (tab) => {
 
   if (!merged.apiKey) {
     chrome.runtime.openOptionsPage();
-    return;
+    return { ok: false, error: 'NO_API_KEY' };
   }
 
-  let streamId;
-  try {
-    streamId = await chrome.tabCapture.getMediaStreamId({ targetTabId: tab.id });
-  } catch (err) {
-    await writeState({
-      active: false,
-      status: 'error',
-      error: 'کروم اجازه نمی‌دهد. روی آیکون کلیک کنید و «ضبط این تب» را انتخاب کنید.'
-    });
-    await broadcastState();
-    await ensureContentScript(tab.id);
-    await broadcastToTab({ type: 'CS_ACTIVE', active: false });
-    return;
+  let streamId = null;
+  const nativeTabCapture = !chrome.tabCapture || chrome.tabCapture.__avanoNative !== false;
+  if (nativeTabCapture) {
+    try {
+      streamId = await chrome.tabCapture.getMediaStreamId({ targetTabId: tab.id });
+    } catch (err) {
+      await ensureContentScript(tab.id);
+      await writeState({
+        active: false,
+        status: 'error',
+        error: 'اجازه‌ی ضبط صدا داده نشد. صفحه را رفرش کنید و دوباره تلاش کنید.'
+      });
+      await broadcastState();
+      await broadcastToTab({ type: 'CS_ACTIVE', active: false });
+      return { ok: false, error: 'NO_STREAM_ID' };
+    }
   }
 
-  await handleStart({ tabId: tab.id, streamId, settings: merged });
+  return handleStart({ tabId: tab.id, streamId, settings: merged });
+}
+
+/* ------------------------------------------------------------- icon click */
+
+/**
+ * Fallback for builds where the toolbar popup is unavailable (for example if
+ * `default_popup` is removed from the manifest). When the popup is present this
+ * listener never fires, because the popup owns the click.
+ */
+chrome.action.onClicked.addListener((tab) => {
+  toggleDubbingOnTab(tab);
 });
+
+/* ---------------------------------------------------------- shortcuts */
+
+/**
+ * Keyboard shortcuts. `_execute_action` / `_execute_browser_action` are handled
+ * by the browser itself (they open the popup), so only the custom commands
+ * arrive here.
+ */
+if (chrome.commands && chrome.commands.onCommand) {
+  chrome.commands.onCommand.addListener(async (command) => {
+    if (command === 'toggle-dubbing') {
+      const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+      await toggleDubbingOnTab(tab);
+      return;
+    }
+    if (command === 'toggle-overlay') {
+      const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+      if (tab && tab.id != null) {
+        chrome.tabs.sendMessage(tab.id, { type: 'CS_TOGGLE_OVERLAY' }).catch(() => {});
+      }
+    }
+  });
+}
 
 /* -------------------------------------------------------------- lifecycle */
 

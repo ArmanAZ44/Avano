@@ -39,6 +39,12 @@
   <img src="docs/img/panel-live.png" alt="پنل در حالت فعال" width="340">
 </p>
 
+## 🚀 شروع در سه قدم
+
+<p align="center">
+  <img src="docs/img/quickstart-fa.png" alt="شروع در سه قدم" width="860">
+</p>
+
 ## ✨ قابلیت‌ها
 
 | قابلیت | توضیح |
@@ -53,6 +59,9 @@
 | **🪟 پاپ‌آپ ساده** | یک دکمه‌ی بزرگ شروع/توقف + زبان، حالت، صدا و زیرنویس؛ بدون تنظیمات پیچیده. |
 | **🌙 پنل شناور شیشه‌ای** | طراحی Glassmorphism بنفش با فونت وزیرمتن، قابل جابه‌جایی، مقاوم در برابر CSS سایت. |
 | **🎬 نشست طولانی** | فشرده‌سازی پنجره‌ی متن + اتصال مجدد خودکار برای فیلم‌های بلند. |
+| **💾 خروجی زیرنویس** | متن اصلی و ترجمه با مُهر زمانی ذخیره می‌شوند؛ خروجی `.txt` از پاپ‌آپ. |
+| **⌨️ میان‌بر صفحه‌کلید** | شروع/توقف دوبله و پنهان‌کردن پنل، بدون باز کردن پاپ‌آپ. |
+| **🦊 مسیر جایگزین فایرفاکس** | اگر مرورگر ضبط صدای تب نداشته باشد، افزونه خودش درخواست اشتراک‌گذاری تب می‌دهد. |
 | **🌍 کراس‌براوزر** | مناسب Chrome، Edge، Brave، Opera و Firefox؛ Chrome/Chromium کامل‌ترین تجربه را دارد. |
 
 ## 🖼️ تصاویر
@@ -77,32 +86,50 @@
   <img src="docs/img/options.png" alt="صفحه تنظیمات" width="700">
 </p>
 
-## 🚀 نصب سریع
+## 📦 نصب
 
-### Chrome
+از [Releases](https://github.com/ArmanAZ44/Avano/releases) یکی از دو بسته را دانلود کنید:
 
-1. آخرین نسخه را از [Releases](https://github.com/ArmanAZ44/Avano/releases) دانلود کنید.
-2. فایل ZIP را استخراج کنید.
-3. `chrome://extensions` را باز کنید → **Developer mode** روشن کنید.
-4. **Load unpacked** → پوشه‌ی `Avano` را انتخاب کنید.
-5. یک کلید API از [Google AI Studio](https://aistudio.google.com/apikey) بسازید.
-6. از صفحه‌ی **Details** افزونه وارد **Extension options** شوید، کلید را وارد کنید → **تست اتصال** → **ذخیره**.
-7. ویدیو را باز کنید و روی آیکون آوانو در نوار ابزار کلیک کنید تا دوبله شروع/توقف شود.
+| فایل | مرورگر |
+|------|--------|
+| `Avano-1.0.0-chrome.zip` | Chrome، Edge، Brave، Opera (Manifest V3) |
+| `Avano-1.0.0-firefox.xpi` | Firefox (Manifest V2) |
+
+### Chrome و مرورگرهای Chromium
+
+1. فایل ZIP را استخراج کنید.
+2. `chrome://extensions` را باز کنید → **Developer mode** را روشن کنید.
+3. **Load unpacked** → پوشه‌ی استخراج‌شده را انتخاب کنید.
+4. روی آیکون آوانو کلیک کنید → چرخ‌دنده → کلید API را وارد کنید → **تست اتصال** → **ذخیره**.
+5. ویدیو را باز کنید و **شروع دوبله** را بزنید.
 
 ### Firefox
 
-1. فایل `manifest-v2.json` را به `manifest.json` تغییر نام دهید (فایل اصلی را جایگزین کنید).
-2. `about:debugging#/runtime/this-firefox` را باز کنید.
-3. **Load Temporary Add-on** → فایل `manifest.json` را انتخاب کنید.
+**راه اول — نصب موقت (سریع، برای امتحان کردن):**
 
-> **نکته:** در Firefox به دلیل نبود `tabCapture`، ممکن است نیاز به استفاده از رله‌ی WebSocket یا تنظیمات خاص داشته باشید.
+1. `about:debugging#/runtime/this-firefox` را باز کنید.
+2. **Load Temporary Add-on…** → فایل `Avano-1.0.0-firefox.xpi` را انتخاب کنید.
+3. با بستن مرورگر افزونه حذف می‌شود؛ برای نصب دوباره همین کار را تکرار کنید.
+
+**راه دوم — نصب دائمی:**
+
+فایل `.xpi` باید امضاشده باشد. یا آن را در [addons.mozilla.org](https://addons.mozilla.org/developers/) بارگذاری کنید تا امضا شود، یا در **Firefox Developer Edition / Nightly** مقدار `xpinstall.signatures.required` را در `about:config` روی `false` بگذارید و سپس فایل را در `about:addons` → چرخ‌دنده → **Install Add-on From File…** نصب کنید.
+
+### کلید API (هر دو مرورگر)
+
+از [Google AI Studio](https://aistudio.google.com/apikey) یک کلید بسازید و در تنظیمات افزونه وارد کنید. کلید فقط در حافظه‌ی محلی مرورگر ذخیره می‌شود.
+
+> **درباره‌ی Firefox:** این مرورگر `tabCapture` ندارد، پس آوانو به‌جای آن پنجره‌ی اشتراک‌گذاری تب را باز می‌کند. در آن پنجره تب را انتخاب کنید و **گزینه‌ی «اشتراک صدای تب» را تیک بزنید**، وگرنه صدایی دریافت نمی‌شود. Chrome/Chromium بهترین تجربه را می‌دهد چون صدای تب را بدون هیچ پنجره‌ی اضافه‌ای می‌گیرد.
 
 ## ⌨️ میان‌برها
 
 | میان‌بر | عمل |
 |---------|-----|
-| `Alt + Shift + D` | پنهان/نمایان کردن پنل |
-| کلیک روی آیکون افزونه | باز شدن پاپ‌آپ کنترل سریع |
+| `Alt + Shift + A` | باز کردن پاپ‌آپ آوانو |
+| `Alt + Shift + D` | شروع یا توقف دوبله |
+| `Alt + Shift + O` | پنهان یا نمایان کردن پنل شناور |
+
+میان‌برها را می‌توانید از `chrome://extensions/shortcuts` (کروم) یا `about:addons` → چرخ‌دنده → **Manage Extension Shortcuts** (فایرفاکس) تغییر دهید.
 
 ## 🏗️ معماری فنی
 
@@ -132,18 +159,37 @@ Avano/
 │       ├── options.html            تنظیمات کامل
 │       ├── options.css
 │       └── options.js
+├── tools/
+│   └── build.mjs                    ساخت بسته‌ی کروم (zip) و فایرفاکس (xpi)
 └── docs/img/                        تصاویر و اسکرین‌شات‌ها
 ```
 
 ### جریان صدا
 
+<p align="center">
+  <img src="docs/img/architecture-fa.png" alt="نمودار معماری آوانو" width="820">
+</p>
+
+<details>
+<summary>نمایش متنی همین نمودار</summary>
+
 ```
-صدای تب ──tabCapture──▶ MediaStream
+صدای تب ──tabCapture / getDisplayMedia──▶ MediaStream
      ├─▶ [AudioContext اصلی] ──▶ origGain ──▶ خروجی   (صدای اصلی)
      └─▶ [AudioContext 16kHz] ──▶ AudioWorklet ──▶ PCM16 ──▶ WebSocket (Gemini)
 
 Gemini ──WebSocket──▶ PCM 24kHz ──▶ AudioWorklet پخش ──▶ dubGain ──▶ خروجی
 ```
+
+</details>
+
+### ساخت بسته‌ها
+
+```bash
+node tools/build.mjs
+```
+
+خروجی در `dist/` ساخته می‌شود: یک `zip` برای کروم و یک `xpi` برای فایرفاکس، هر دو از همین یک سورس. اسکریپت هیچ وابستگی بیرونی ندارد (فقط `node:zlib`).
 
 ## ⚙️ تنظیمات پیشرفته
 
@@ -166,6 +212,9 @@ Gemini ──WebSocket──▶ PCM 24kHz ──▶ AudioWorklet پخش ──�
 | **اتصال ۱۰۰۶** | شبکه یا فیلترشکن را بررسی کنید؛ proxy را تنظیم کنید. |
 | **مدل پیدا نشد** | نام مدل را در تنظیمات تغییر دهید یا proxy را بررسی کنید. |
 | **تأخیر زیاد** | پروفایل «حداکثر سرعت» را انتخاب کنید و بلوک ضبط را ۱۶ms بگذارید. |
+| **در فایرفاکس صدایی شنیده نمی‌شود** | در پنجره‌ی اشتراک‌گذاری، تب را انتخاب کنید و تیک «اشتراک صدای تب» را بزنید. |
+| **دوبله از ویدیو عقب می‌افتد** | «سقف بافر پخش» را کم کنید (مثلاً ۴۰۰ms) تا بافر مازاد سریع‌تر حذف شود. |
+| **میان‌بر کار نمی‌کند** | ممکن است با میان‌بر برنامه‌ی دیگری تداخل داشته باشد؛ از صفحه‌ی مدیریت میان‌برها تغییرش دهید. |
 
 ## 🤝 مشارکت
 
@@ -205,6 +254,12 @@ Gemini ──WebSocket──▶ PCM 24kHz ──▶ AudioWorklet پخش ──�
   <img src="docs/img/panel-live.png" alt="Avano Panel Live" width="300">
 </p>
 
+## 🚀 Three-step setup
+
+<p align="center">
+  <img src="docs/img/quickstart-en.png" alt="Three-step setup" width="860">
+</p>
+
 ## ✨ Features
 
 | Feature | Description |
@@ -219,40 +274,85 @@ Gemini ──WebSocket──▶ PCM 24kHz ──▶ AudioWorklet پخش ──�
 | **🪟 Simple Popup** | One big Start/Stop button plus language, mode, volume and subtitle toggles — no clutter. |
 | **🌙 Glassmorphism UI** | Purple glassmorphism design with Vazirmatn font, draggable, immune to page CSS. |
 | **🎬 Long Session Support** | Context window compression + auto-reconnect for long movies. |
+| **💾 Transcript Export** | Source text and translation are saved with timestamps to a `.txt` file from the popup. |
+| **⌨️ Keyboard Shortcuts** | Start/stop dubbing and hide the panel without opening the popup. |
+| **🦊 Firefox Fallback Path** | When the browser has no tab-audio capture, the extension asks for tab sharing instead. |
 | **🌍 Cross-browser** | Built for Chrome, Edge, Brave, Opera and Firefox; Chrome/Chromium provides the most complete experience. |
 
 ## 🖼️ Screenshots
+
+### Popup (quick controls)
+
+<p align="center">
+  <img src="docs/img/popup-idle.png" alt="Popup idle" width="300">
+  <img src="docs/img/popup-live.png" alt="Popup live" width="300">
+</p>
+
+### Floating panel over the video
+
+<p align="center">
+  <img src="docs/img/panel-idle.png" alt="Panel idle" width="330">
+  <img src="docs/img/panel-live.png" alt="Panel live" width="330">
+</p>
+
+### Full settings page
 
 <p align="center">
   <img src="docs/img/options.png" alt="Settings Page" width="700">
 </p>
 
-## 🚀 Quick Install
+### Brand assets
 
-### Chrome
+<p align="center">
+  <img src="docs/img/logo-256.png" alt="Avano logo" width="96">
+</p>
 
-1. Download the latest release from [Releases](https://github.com/ArmanAZ44/Avano/releases).
-2. Extract the ZIP file.
-3. Open `chrome://extensions` → enable **Developer mode**.
-4. Click **Load unpacked** → select the `Avano` folder.
-5. Get an API key from [Google AI Studio](https://aistudio.google.com/apikey).
-6. Open the extension **Details** page → **Extension options**, enter the API key → **Test Connection** → **Save**.
-7. Open any video and click the Avano toolbar icon to start/stop dubbing.
+High-resolution marks for forks, stores and write-ups: [`docs/img/logo-512.png`](docs/img/logo-512.png) and [`docs/img/banner.png`](docs/img/banner.png).
+
+## 📦 Installation
+
+Grab one of the two packages from [Releases](https://github.com/ArmanAZ44/Avano/releases):
+
+| File | Browser |
+|------|---------|
+| `Avano-1.0.0-chrome.zip` | Chrome, Edge, Brave, Opera (Manifest V3) |
+| `Avano-1.0.0-firefox.xpi` | Firefox (Manifest V2) |
+
+### Chrome and Chromium browsers
+
+1. Extract the ZIP file.
+2. Open `chrome://extensions` → enable **Developer mode**.
+3. Click **Load unpacked** → select the extracted folder.
+4. Click the Avano icon → gear → paste your API key → **Test Connection** → **Save**.
+5. Open any video and press **Start dubbing**.
 
 ### Firefox
 
-1. Rename `manifest-v2.json` to `manifest.json` (replace the original).
-2. Open `about:debugging#/runtime/this-firefox`.
-3. Click **Load Temporary Add-on** → select `manifest.json`.
+**Option 1 — temporary install (quick, for trying it out):**
 
-> **Note:** Firefox lacks native `tabCapture`, so a WebSocket relay or specific setup may be needed.
+1. Open `about:debugging#/runtime/this-firefox`.
+2. Click **Load Temporary Add-on…** → select `Avano-1.0.0-firefox.xpi`.
+3. The add-on disappears when the browser closes; repeat to load it again.
+
+**Option 2 — permanent install:**
+
+The `.xpi` must be signed. Either upload it to [addons.mozilla.org](https://addons.mozilla.org/developers/) for signing, or set `xpinstall.signatures.required` to `false` in `about:config` on **Firefox Developer Edition / Nightly**, then install the file via `about:addons` → gear → **Install Add-on From File…**.
+
+### API key (both browsers)
+
+Create a key at [Google AI Studio](https://aistudio.google.com/apikey) and paste it into the extension settings. It is stored locally in your browser only.
+
+> **About Firefox:** Firefox has no `tabCapture`, so Avano opens the share dialog instead. Pick the tab there and **tick "Share tab audio"** — otherwise no audio is captured. Chrome/Chromium gives the smoothest experience because it captures tab audio with no extra dialog.
 
 ## ⌨️ Shortcuts
 
 | Shortcut | Action |
 |----------|--------|
-| `Alt + Shift + D` | Toggle overlay visibility |
-| Click extension icon | Open the quick-control popup |
+| `Alt + Shift + A` | Open the Avano popup |
+| `Alt + Shift + D` | Start or stop dubbing |
+| `Alt + Shift + O` | Show or hide the floating panel |
+
+Rebind them from `chrome://extensions/shortcuts` (Chrome) or `about:addons` → gear → **Manage Extension Shortcuts** (Firefox).
 
 ## 🏗️ Architecture
 
@@ -282,18 +382,37 @@ Avano/
 │       ├── options.html            Full settings page
 │       ├── options.css
 │       └── options.js
+├── tools/
+│   └── build.mjs                   Builds the Chrome zip and the Firefox xpi
 └── docs/img/                        Screenshots & images
 ```
 
 ### Audio Pipeline
 
+<p align="center">
+  <img src="docs/img/architecture-en.png" alt="Avano architecture diagram" width="820">
+</p>
+
+<details>
+<summary>Show the same diagram as text</summary>
+
 ```
-Tab Audio ──tabCapture──▶ MediaStream
+Tab Audio ──tabCapture / getDisplayMedia──▶ MediaStream
      ├─▶ [Main AudioContext] ──▶ origGain ──▶ Output   (Original audio)
      └─▶ [16kHz AudioContext] ──▶ AudioWorklet ──▶ PCM16 ──▶ WebSocket (Gemini)
 
 Gemini ──WebSocket──▶ PCM 24kHz ──▶ Playback Worklet ──▶ dubGain ──▶ Output
 ```
+
+</details>
+
+### Building the packages
+
+```bash
+node tools/build.mjs
+```
+
+Both `dist/Avano-<version>-chrome.zip` and `dist/Avano-<version>-firefox.xpi` are produced from the same source tree. The script has no external dependencies (only `node:zlib`).
 
 ## ⚙️ Advanced Settings
 
@@ -315,6 +434,9 @@ Gemini ──WebSocket──▶ PCM 24kHz ──▶ Playback Worklet ──▶ d
 | **"API key not set"** | Open settings and enter your AI Studio key. |
 | **Connection 1006** | Check network / VPN; configure proxy if needed. |
 | **Model not found** | Change model name in settings or check proxy. |
+| **No audio on Firefox** | In the share dialog, pick the tab and tick **Share tab audio**. |
+| **The dub drifts behind the video** | Lower the **Playback Backlog Cap** (e.g. 400 ms) so excess buffer is trimmed sooner. |
+| **A shortcut does nothing** | It may clash with another app; rebind it from the browser's shortcut manager. |
 | **High latency** | Select "Maximum Speed" profile and set 16ms capture frame. |
 
 ## 🤝 Contributing

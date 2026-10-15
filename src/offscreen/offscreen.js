@@ -40,6 +40,18 @@ const WS_OPEN = 1;
 const MAX_RECONNECT_DELAY = 8000;
 const WARM_TTL_MS = 120000;
 
+/** Raw capture errors translated into something a normal user can act on. */
+const FRIENDLY_ERRORS = {
+  CAPTURE_UNSUPPORTED:
+    'این مرورگر ضبط صدا را پشتیبانی نمی‌کند. از Chrome، Edge، Brave یا Opera استفاده کنید.',
+  NO_AUDIO_TRACK:
+    'صدایی از تب انتخاب‌شده دریافت نشد. در پنجره‌ی اشتراک‌گذاری، گزینه‌ی «اشتراک صدای تب» را هم تیک بزنید.',
+  'Permission denied':
+    'اجازه‌ی اشتراک‌گذاری داده نشد. صفحه را رفرش کنید و دوباره تلاش کنید.',
+  'Permission dismissed':
+    'پنجره‌ی اشتراک‌گذاری بسته شد. دوباره تلاش کنید و این بار تب را انتخاب کنید.'
+};
+
 /* ------------------------------------------------------------------ utils */
 
 function bytesToBase64(bytes) {
@@ -335,18 +347,54 @@ async function buildPlaybackChain() {
   await S.ctxPlayback.resume().catch(() => {});
 }
 
-async function buildGraph(streamId) {
-  const constraints = {
-    audio: {
-      mandatory: {
-        chromeMediaSource: 'tab',
-        chromeMediaSourceId: streamId
-      }
-    },
-    video: false
-  };
+/**
+ * Obtain the audio stream to dub.
+ *
+ * Chromium exposes `chrome.tabCapture.getMediaStreamId`, which we consume with
+ * a `chromeMediaSource: 'tab'` constraint. Browsers without native tab capture
+ * (Firefox) fall back to `getDisplayMedia`, where the user picks the tab in the
+ * share dialog and has to tick "Share audio". The fallback also kicks in if a
+ * tab-constrained capture is rejected for any reason.
+ */
+async function acquireStream(streamId) {
+  if (streamId) {
+    try {
+      return await navigator.mediaDevices.getUserMedia({
+        audio: {
+          mandatory: {
+            chromeMediaSource: 'tab',
+            chromeMediaSourceId: streamId
+          }
+        },
+        video: false
+      });
+    } catch (err) {
+      console.warn('[avano] tab capture failed, falling back to display capture:', err);
+    }
+  }
 
-  S.mediaStream = await navigator.mediaDevices.getUserMedia(constraints);
+  if (!navigator.mediaDevices || !navigator.mediaDevices.getDisplayMedia) {
+    throw new Error('CAPTURE_UNSUPPORTED');
+  }
+
+  const stream = await navigator.mediaDevices.getDisplayMedia({
+    video: true,
+    audio: {
+      echoCancellation: false,
+      noiseSuppression: false,
+      autoGainControl: false
+    }
+  });
+
+  if (!stream.getAudioTracks().length) {
+    stream.getTracks().forEach((t) => t.stop());
+    throw new Error('NO_AUDIO_TRACK');
+  }
+  return stream;
+}
+
+async function buildGraph(streamId) {
+  S.mediaStream = await acquireStream(streamId);
 
   // 1) original-audio bed, at the native rate so it keeps full quality
   S.ctxMain = new AudioContext();
@@ -775,7 +823,8 @@ async function start(streamId, tabId, settings) {
     startLevelTimer();
     return { ok: true, reused: reusable };
   } catch (err) {
-    const message = err && err.message ? err.message : String(err);
+    const raw = err && err.message ? err.message : String(err);
+    const message = FRIENDLY_ERRORS[raw] || raw;
     await stop({ silent: true });
     reportFatal(message);
     return { ok: false, error: message };
