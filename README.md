@@ -42,29 +42,29 @@
 
 ## 🌐 Languages | زبان‌ها
 
-- [🇮🇷 فارسی (Persian)](#🇮🇷-آوانو-—-دوبله‌ی-هم‌زمان-ویدیو)
-- [🇺🇸 English](#🇺🇸-avano-—-real-time-video-dubbing)
+- [🇮🇷 فارسی (Persian)](#fa)
+- [🇺🇸 English](#en)
 
 **فهرست مطالب / Table of contents**
 
 | فارسی | English |
 |---|---|
-| [شروع در سه قدم](#-شروع-در-سه-قدم) | [Three-step setup](#-three-step-setup) |
-| [قابلیت‌ها](#-قابلیت‌ها) | [Features](#-features) |
-| [تصاویر](#-تصاویر) | [Screenshots](#-screenshots) |
-| [نصب](#-نصب) | [Installation](#-installation) |
-| [میان‌برها](#-میان‌برها) | [Shortcuts](#-shortcuts) |
-| [معماری فنی](#-معماری-فنی) | [Architecture](#-architecture) |
-| [تنظیمات پیشرفته](#-تنظیمات-پیشرفته) | [Advanced settings](#-advanced-settings) |
-| [پرسش‌های پرتکرار](#-پرسش‌های-پرتکرار) | [FAQ](#-faq) |
-| [عیب‌یابی](#-عیب‌یابی) | [Troubleshooting](#-troubleshooting) |
-| [توسعه و مشارکت](#-توسعه-و-مشارکت) | [Development](#-development) |
-| [نقشه‌ی راه](#-نقشه‌ی-راه) | [Roadmap](#-roadmap) |
-| [مجوز](#-مجوز) | [License](#-license) |
+| [شروع در سه قدم](#fa-quickstart) | [Three-step setup](#en-quickstart) |
+| [قابلیت‌ها](#fa-features) | [Features](#en-features) |
+| [تصاویر](#fa-screenshots) | [Screenshots](#en-screenshots) |
+| [نصب](#fa-install) | [Installation](#en-install) |
+| [میان‌برها](#fa-shortcuts) | [Shortcuts](#en-shortcuts) |
+| [معماری فنی](#fa-architecture) | [Architecture](#en-architecture) |
+| [تنظیمات پیشرفته](#fa-settings) | [Advanced settings](#en-settings) |
+| [پرسش‌های پرتکرار](#fa-faq) | [FAQ](#en-faq) |
+| [عیب‌یابی](#fa-troubleshooting) | [Troubleshooting](#en-troubleshooting) |
+| [توسعه و مشارکت](#fa-dev) | [Development](#en-dev) |
+| [نقشه‌ی راه](#fa-roadmap) | [Roadmap](#en-roadmap) |
+| [مجوز](#fa-license) | [License](#en-license) |
 
 ---
 
-<a name="🇮🇷-آوانو-—-دوبله‌ی-هم‌زمان-ویدیو"></a>
+<a name="fa"></a>
 # 🇮🇷 آوانو — دوبله‌ی هم‌زمان ویدیو
 
 <p align="center">
@@ -72,12 +72,14 @@
   <img src="docs/img/panel-live.png" alt="پنل در حالت فعال" width="340">
 </p>
 
+<a name="fa-quickstart"></a>
 ## 🚀 شروع در سه قدم
 
 <p align="center">
   <img src="docs/img/quickstart-fa.png" alt="شروع در سه قدم" width="860">
 </p>
 
+<a name="fa-features"></a>
 ## ✨ قابلیت‌ها
 
 | قابلیت | توضیح |
@@ -97,6 +99,7 @@
 | **🦊 مسیر جایگزین فایرفاکس** | اگر مرورگر ضبط صدای تب نداشته باشد، افزونه خودش درخواست اشتراک‌گذاری تب می‌دهد. |
 | **🌍 کراس‌براوزر** | مناسب Chrome، Edge، Brave، Opera و Firefox؛ Chrome/Chromium کامل‌ترین تجربه را دارد. |
 
+<a name="fa-screenshots"></a>
 ## 🖼️ تصاویر
 
 ### پاپ‌آپ افزونه (کنترل سریع)
@@ -119,6 +122,7 @@
   <img src="docs/img/options.png" alt="صفحه تنظیمات" width="700">
 </p>
 
+<a name="fa-install"></a>
 ## 📦 نصب
 
 از [Releases](https://github.com/ArmanAZ44/Avano/releases) یکی از دو بسته را دانلود کنید:
@@ -154,6 +158,7 @@
 
 > **درباره‌ی Firefox:** این مرورگر `tabCapture` ندارد، پس آوانو به‌جای آن پنجره‌ی اشتراک‌گذاری تب را باز می‌کند. در آن پنجره تب را انتخاب کنید و **گزینه‌ی «اشتراک صدای تب» را تیک بزنید**، وگرنه صدایی دریافت نمی‌شود. Chrome/Chromium بهترین تجربه را می‌دهد چون صدای تب را بدون هیچ پنجره‌ی اضافه‌ای می‌گیرد.
 
+<a name="fa-shortcuts"></a>
 ## ⌨️ میان‌برها
 
 | میان‌بر | عمل |
@@ -164,6 +169,7 @@
 
 میان‌برها را می‌توانید از `chrome://extensions/shortcuts` (کروم) یا `about:addons` → چرخ‌دنده → **Manage Extension Shortcuts** (فایرفاکس) تغییر دهید.
 
+<a name="fa-architecture"></a>
 ## 🏗️ معماری فنی
 
 ```
@@ -220,6 +226,7 @@ Gemini ──WebSocket──▶ PCM 24kHz ──▶ AudioWorklet پخش ──�
 
 </details>
 
+<a name="fa-settings"></a>
 ## ⚙️ تنظیمات پیشرفته
 
 | تنظیم | توضیح |
@@ -232,6 +239,7 @@ Gemini ──WebSocket──▶ PCM 24kHz ──▶ AudioWorklet پخش ──�
 | **محدودکننده‌ی نرم** | جلوگیری از اعوجاج در حجم بالا |
 | **گرم‌کردن اتصال** | باز کردن WebSocket از قبل برای شروع سریع‌تر |
 
+<a name="fa-troubleshooting"></a>
 ## ❓ عیب‌یابی
 
 | مشکل | راه‌حل |
@@ -245,6 +253,7 @@ Gemini ──WebSocket──▶ PCM 24kHz ──▶ AudioWorklet پخش ──�
 | **دوبله از ویدیو عقب می‌افتد** | «سقف بافر پخش» را کم کنید (مثلاً ۴۰۰ms) تا بافر مازاد سریع‌تر حذف شود. |
 | **میان‌بر کار نمی‌کند** | ممکن است با میان‌بر برنامه‌ی دیگری تداخل داشته باشد؛ از صفحه‌ی مدیریت میان‌برها تغییرش دهید. |
 
+<a name="fa-faq"></a>
 ## ❓ پرسش‌های پرتکرار
 
 <details>
@@ -305,6 +314,7 @@ API نیازمند انتخاب دستی تب است. یادتان باشد تی
 جدید پاک می‌شود.
 </details>
 
+<a name="fa-dev"></a>
 ## 🛠️ توسعه و مشارکت
 
 پیش از هر چیز، [CONTRIBUTING.md](CONTRIBUTING.md) را بخوانید. خلاصه‌ی سریع:
@@ -341,6 +351,7 @@ node tools/build.mjs        # ساخت dist/Avano-<version>-chrome.zip و -firef
 بررسی می‌کند تا این اشتباه زودتر گرفته شود. APIهای غایب در فایرفاکس هم در
 `src/shared/browser-api.js` پوش داده می‌شوند.
 
+<a name="fa-roadmap"></a>
 ## 🗺️ نقشه‌ی راه
 
 - [x] دوبله‌ی هم‌زمان با دو حالت ترجمه و دوبله‌ی بیانی
@@ -356,6 +367,7 @@ node tools/build.mjs        # ساخت dist/Avano-<version>-chrome.zip و -firef
 
 ایده‌ای دارید؟ [Issue باز کنید](https://github.com/ArmanAZ44/Avano/issues/new/choose).
 
+<a name="fa-license"></a>
 ## 📜 مجوز
 
 این پروژه تحت مجوز [MIT](LICENSE) منتشر شده است — استفاده، تغییر و توزیع آزاد است،
@@ -382,7 +394,7 @@ node tools/build.mjs        # ساخت dist/Avano-<version>-chrome.zip و -firef
 
 ---
 
-<a name="🇺🇸-avano-—-real-time-video-dubbing"></a>
+<a name="en"></a>
 # 🇺🇸 Avano — Real-time Video Dubbing
 
 <p align="center">
@@ -391,12 +403,14 @@ node tools/build.mjs        # ساخت dist/Avano-<version>-chrome.zip و -firef
   <img src="docs/img/panel-live.png" alt="Avano Panel Live" width="300">
 </p>
 
+<a name="en-quickstart"></a>
 ## 🚀 Three-step setup
 
 <p align="center">
   <img src="docs/img/quickstart-en.png" alt="Three-step setup" width="860">
 </p>
 
+<a name="en-features"></a>
 ## ✨ Features
 
 | Feature | Description |
@@ -416,6 +430,7 @@ node tools/build.mjs        # ساخت dist/Avano-<version>-chrome.zip و -firef
 | **🦊 Firefox Fallback Path** | When the browser has no tab-audio capture, the extension asks for tab sharing instead. |
 | **🌍 Cross-browser** | Built for Chrome, Edge, Brave, Opera and Firefox; Chrome/Chromium provides the most complete experience. |
 
+<a name="en-screenshots"></a>
 ## 🖼️ Screenshots
 
 ### Popup (quick controls)
@@ -446,6 +461,7 @@ node tools/build.mjs        # ساخت dist/Avano-<version>-chrome.zip و -firef
 
 High-resolution marks for forks, stores and write-ups: [`docs/img/logo-512.png`](docs/img/logo-512.png) and [`docs/img/banner.png`](docs/img/banner.png).
 
+<a name="en-install"></a>
 ## 📦 Installation
 
 Grab one of the two packages from [Releases](https://github.com/ArmanAZ44/Avano/releases):
@@ -481,6 +497,7 @@ Create a key at [Google AI Studio](https://aistudio.google.com/apikey) and paste
 
 > **About Firefox:** Firefox has no `tabCapture`, so Avano opens the share dialog instead. Pick the tab there and **tick "Share tab audio"** — otherwise no audio is captured. Chrome/Chromium gives the smoothest experience because it captures tab audio with no extra dialog.
 
+<a name="en-shortcuts"></a>
 ## ⌨️ Shortcuts
 
 | Shortcut | Action |
@@ -491,6 +508,7 @@ Create a key at [Google AI Studio](https://aistudio.google.com/apikey) and paste
 
 Rebind them from `chrome://extensions/shortcuts` (Chrome) or `about:addons` → gear → **Manage Extension Shortcuts** (Firefox).
 
+<a name="en-architecture"></a>
 ## 🏗️ Architecture
 
 ```
@@ -547,6 +565,7 @@ Gemini ──WebSocket──▶ PCM 24kHz ──▶ Playback Worklet ──▶ d
 
 </details>
 
+<a name="en-settings"></a>
 ## ⚙️ Advanced Settings
 
 | Setting | Description |
@@ -559,6 +578,7 @@ Gemini ──WebSocket──▶ PCM 24kHz ──▶ Playback Worklet ──▶ d
 | **Soft Limiter** | Prevents distortion above 100% volume |
 | **Connection Prewarm** | Opens WebSocket in advance for faster start |
 
+<a name="en-troubleshooting"></a>
 ## ❓ Troubleshooting
 
 | Issue | Solution |
@@ -572,6 +592,7 @@ Gemini ──WebSocket──▶ PCM 24kHz ──▶ Playback Worklet ──▶ d
 | **A shortcut does nothing** | It may clash with another app; rebind it from the browser's shortcut manager. |
 | **High latency** | Select "Maximum Speed" profile and set 16ms capture frame. |
 
+<a name="en-faq"></a>
 ## ❓ FAQ
 
 <details>
@@ -632,6 +653,7 @@ The **Save transcript** button in the popup downloads a timestamped `.txt`. Use 
 reset the log. It lives in memory only and resets when a new dubbing session starts.
 </details>
 
+<a name="en-dev"></a>
 ## 🛠️ Development
 
 Read [CONTRIBUTING.md](CONTRIBUTING.md) first. The short version:
@@ -667,6 +689,7 @@ Every file the extension needs must be registered in **both** `manifest.json` (C
 `manifest-v2.json` (Firefox). `tools/validate.mjs` resolves every manifest reference so that
 mistake is caught early. APIs Firefox lacks get a shim in `src/shared/browser-api.js`.
 
+<a name="en-roadmap"></a>
 ## 🗺️ Roadmap
 
 - [x] Real-time dubbing with translation and expressive-dub modes
@@ -682,6 +705,7 @@ mistake is caught early. APIs Firefox lacks get a shim in `src/shared/browser-ap
 
 Have an idea? [Open an issue](https://github.com/ArmanAZ44/Avano/issues/new/choose).
 
+<a name="en-license"></a>
 ## 📜 License
 
 Released under the [MIT](LICENSE) License — free to use, modify and distribute, as long as you
