@@ -24,11 +24,17 @@ const DIST = path.join(ROOT, 'dist');
 const EXCLUDE = new Set([
   '.git',
   '.gitignore',
+  '.github',
+  '.editorconfig',
   'dist',
   'node_modules',
   'tools',
   'docs',
   'README.md',
+  'CHANGELOG.md',
+  'CONTRIBUTING.md',
+  'CODE_OF_CONDUCT.md',
+  'SECURITY.md',
   'LICENSE',
   'package.json',
   'package-lock.json'

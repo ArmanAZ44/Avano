@@ -1,0 +1,35 @@
+{
+  "name": "avano",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "آوانو | Avano — real-time video dubbing for the web with the Gemini Live API",
+  "license": "MIT",
+  "author": "Arman AZ <https://github.com/ArmanAZ44>",
+  "homepage": "https://github.com/ArmanAZ44/Avano",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ArmanAZ44/Avano.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ArmanAZ44/Avano/issues"
+  },
+  "keywords": [
+    "browser-extension",
+    "chrome-extension",
+    "firefox-addon",
+    "dubbing",
+    "translation",
+    "gemini",
+    "live-api",
+    "persian"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "build": "node tools/build.mjs",
+    "check": "node tools/validate.mjs",
+    "test": "node tools/validate.mjs"
+  }
+}

@@ -1,0 +1,48 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    name: Validate and build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Validate sources and manifests
+        run: node tools/validate.mjs --strict
+
+      - name: Build packages
+        run: node tools/build.mjs
+
+      - name: Inspect the produced packages
+        run: |
+          node -e '
+            const fs = require("fs");
+            for (const f of fs.readdirSync("dist")) {
+              const size = fs.statSync("dist/" + f).size;
+              if (size < 50_000) throw new Error(f + " looks too small (" + size + " bytes)");
+              console.log(f, size, "bytes");
+            }
+          '
+
+      - name: Upload packages
+        uses: actions/upload-artifact@v4
+        with:
+          name: avano-packages
+          path: dist/*
+          if-no-files-found: error
+          retention-days: 14

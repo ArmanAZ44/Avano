@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: سؤال و گفت‌وگو | Questions and chat
+    url: https://t.me/ArmanAZPC
+    about: برای سؤال سریع یا گفت‌وگوی آزاد به کانال تلگرام بیایید.
+  - name: راهنمای نصب | Setup guide
+    url: https://github.com/ArmanAZ44/Avano#-نصب
+    about: مراحل نصب کروم و فایرفاکس و ساختن کلید API.

@@ -1,0 +1,108 @@
+name: گزارش اشکال | Bug report
+description: چیزی درست کار نمی‌کند؟ اینجا بنویسید.
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ممنون که وقت می‌گذارید. لطفاً **کلید API خود را اینجا ننویسید** — آن را با `AIza...` جایگزین کنید.
+
+  - type: dropdown
+    id: browser
+    attributes:
+      label: مرورگر
+      description: روی کدام مرورگر تست کردید؟
+      options:
+        - Chrome
+        - Edge
+        - Brave
+        - Opera
+        - Firefox
+        - سایر (در توضیحات بنویسید)
+    validations:
+      required: true
+
+  - type: input
+    id: browser-version
+    attributes:
+      label: نسخه‌ی مرورگر
+      placeholder: مثلاً 141.0.7390.55
+    validations:
+      required: true
+
+  - type: input
+    id: os
+    attributes:
+      label: سیستم‌عامل
+      placeholder: مثلاً Windows 11 / macOS 15 / Ubuntu 24.04
+    validations:
+      required: true
+
+  - type: dropdown
+    id: mode
+    attributes:
+      label: حالت دوبله
+      options:
+        - ترجمه‌ی هم‌زمان (Live Translate)
+        - دوبله‌ی بیانی (Expressive Dub)
+        - مطمئن نیستم
+    validations:
+      required: true
+
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: چه اتفاقی افتاد؟
+      description: رفتار واقعی را توضیح دهید.
+      placeholder: وقتی روی «شروع دوبله» می‌زنم، ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: انتظار داشتید چه بشود؟
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: مراحل بازتولید
+      placeholder: |
+        1. ویدیوی ... را باز کردم
+        2. روی آیکون افزونه کلیک کردم
+        3. ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: console
+    attributes:
+      label: خطاهای کنسول یا صفحه‌ی افزونه
+      description: |
+        خطاها را از این دو جا بگیرید:
+        - کنسول صفحه: `F12` → تب Console
+        - کنسول افزونه: `chrome://extensions` → Details → Errors
+      render: shell
+    validations:
+      required: false
+
+  - type: textarea
+    id: settings
+    attributes:
+      label: تنظیمات مرتبط
+      description: پروفایل تأخیر، زبان مقصد، حالت، و اینکه کلید API و Billing فعال است یا نه.
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: بررسی‌های نهایی
+      options:
+        - label: آخرین نسخه را از Releases تست کردم
+          required: true
+        - label: کلید API یا اطلاعات حساس در این گزارش نیست
+          required: true

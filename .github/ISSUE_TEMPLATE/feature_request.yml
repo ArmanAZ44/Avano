@@ -1,0 +1,49 @@
+name: درخواست قابلیت | Feature request
+description: ایده یا قابلیت جدیدی دارید؟
+title: "[Feature]: "
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: چه مشکلی را حل می‌کند؟
+      description: به‌جای توضیح راه‌حل، موقعیتی را بگویید که آزارتان می‌دهد.
+      placeholder: وقتی ... می‌کنم، مجبورم ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: پیشنهاد شما چیست؟
+    validations:
+      required: true
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: حوزه
+      options:
+        - رابط کاربری و ظاهر
+        - کیفیت یا تأخیر صدا
+        - پشتیبانی مرورگر
+        - ترجمه و زیرنویس
+        - تنظیمات و گزینه‌ها
+        - سایر
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: گزینه‌های دیگری که بررسی کردید
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: minimal
+    attributes:
+      label: اصل سادگی
+      options:
+        - label: این قابلیت را می‌شود طوری ساخت که برای کاربر تازه‌کار گیج‌کننده نباشد
+          required: true

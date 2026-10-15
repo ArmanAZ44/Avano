@@ -11,11 +11,27 @@
 
 <p align="center">
   <img src="https://img.shields.io/badge/version-1.0.0-a855f7?style=for-the-badge" alt="Version 1.0.0">
-  <a href="https://github.com/ArmanAZ44/Avano">
+  <img src="https://img.shields.io/badge/Manifest-V3%20%2B%20V2-a855f7?style=for-the-badge" alt="Manifest V3 + V2">
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-a855f7?style=for-the-badge" alt="MIT License"></a>
+  <a href="https://github.com/ArmanAZ44/Avano/actions/workflows/ci.yml">
+    <img src="https://img.shields.io/github/actions/workflow/status/ArmanAZ44/Avano/ci.yml?style=for-the-badge&label=CI" alt="CI status">
+  </a>
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/Chrome-✓-4285F4?style=for-the-badge&logo=googlechrome&logoColor=white" alt="Chrome">
+  <img src="https://img.shields.io/badge/Edge-✓-0078D7?style=for-the-badge&logo=microsoftedge&logoColor=white" alt="Edge">
+  <img src="https://img.shields.io/badge/Firefox-✓-FF7139?style=for-the-badge&logo=firefoxbrowser&logoColor=white" alt="Firefox">
+  <img src="https://img.shields.io/badge/Opera-✓-FF1B2D?style=for-the-badge&logo=opera&logoColor=white" alt="Opera">
+  <img src="https://img.shields.io/badge/Brave-✓-FB542B?style=for-the-badge&logo=brave&logoColor=white" alt="Brave">
+</p>
+
+<p align="center">
+  <a href="https://github.com/ArmanAZ44/Avano/stargazers">
     <img src="https://img.shields.io/github/stars/ArmanAZ44/Avano?style=for-the-badge&color=a855f7&logo=github" alt="GitHub Stars">
   </a>
   <a href="https://t.me/ArmanAZPC">
-    <img src="https://img.shields.io/badge/Telegram-ArmanAZPC-26A5E4?style=for-the-badge&logo=telegram" alt="Telegram">
+    <img src="https://img.shields.io/badge/Telegram-ArmanAZPC-26A5E4?style=for-the-badge&logo=telegram&logoColor=white" alt="Telegram">
   </a>
   <a href="https://reymit.ir/armanaz44">
     <img src="https://img.shields.io/badge/حمایت_مالی-Reymit-f472b6?style=for-the-badge" alt="Support">
@@ -28,6 +44,23 @@
 
 - [🇮🇷 فارسی (Persian)](#🇮🇷-آوانو-—-دوبله‌ی-هم‌زمان-ویدیو)
 - [🇺🇸 English](#🇺🇸-avano-—-real-time-video-dubbing)
+
+**فهرست مطالب / Table of contents**
+
+| فارسی | English |
+|---|---|
+| [شروع در سه قدم](#-شروع-در-سه-قدم) | [Three-step setup](#-three-step-setup) |
+| [قابلیت‌ها](#-قابلیت‌ها) | [Features](#-features) |
+| [تصاویر](#-تصاویر) | [Screenshots](#-screenshots) |
+| [نصب](#-نصب) | [Installation](#-installation) |
+| [میان‌برها](#-میان‌برها) | [Shortcuts](#-shortcuts) |
+| [معماری فنی](#-معماری-فنی) | [Architecture](#-architecture) |
+| [تنظیمات پیشرفته](#-تنظیمات-پیشرفته) | [Advanced settings](#-advanced-settings) |
+| [پرسش‌های پرتکرار](#-پرسش‌های-پرتکرار) | [FAQ](#-faq) |
+| [عیب‌یابی](#-عیب‌یابی) | [Troubleshooting](#-troubleshooting) |
+| [توسعه و مشارکت](#-توسعه-و-مشارکت) | [Development](#-development) |
+| [نقشه‌ی راه](#-نقشه‌ی-راه) | [Roadmap](#-roadmap) |
+| [مجوز](#-مجوز) | [License](#-license) |
 
 ---
 
@@ -135,15 +168,23 @@
 
 ```
 Avano/
-├── manifest.json                    Chrome MV3
-├── manifest-v2.json                 Firefox MV2
+├── manifest.json                    کروم / Chromium — Manifest V3
+├── manifest-v2.json                 فایرفاکس — Manifest V2
+├── package.json                     اسکریپت‌های npm (build / check)
+├── LICENSE · CHANGELOG.md · CONTRIBUTING.md · SECURITY.md
+├── .github/
+│   ├── workflows/ci.yml             اعتبارسنجی و ساخت در هر push و PR
+│   ├── workflows/release.yml        ساخت و انتشار خودکار با تگ v*
+│   ├── ISSUE_TEMPLATE/              فرم‌های گزارش اشکال و درخواست قابلیت
+│   └── PULL_REQUEST_TEMPLATE.md
 ├── assets/                          آیکون‌ها و فونت وزیرمتن
 ├── src/
 │   ├── shared/
 │   │   ├── config.js               تنظیمات، زبان‌ها، سازنده‌ی پیام‌های Gemini
 │   │   └── browser-api.js          پلی‌فیل کراس‌براوزر
 │   ├── background/
-│   │   └── service-worker.js       چرخه‌ی عمر و مسیریابی
+│   │   ├── service-worker.js       چرخه‌ی عمر، مسیریابی، میان‌برها، لاگ زیرنویس
+│   │   └── background-firefox.html میزبان background در فایرفاکس (MV2)
 │   ├── offscreen/
 │   │   ├── offscreen.html          صفحه‌ی نامرئی برای Web Audio
 │   │   ├── offscreen.js            موتور اصلی: ضبط، WebSocket، پخش
@@ -151,16 +192,12 @@ Avano/
 │   ├── content/
 │   │   ├── content.js              پنل شناور + زیرنویس + کنترل ویدیو
 │   │   └── content.css             جای‌گذاری لایه‌ی پنل
-│   ├── popup/
-│   │   ├── popup.html              پاپ‌آپ کنترل سریع
-│   │   ├── popup.css
-│   │   └── popup.js
-│   └── options/
-│       ├── options.html            تنظیمات کامل
-│       ├── options.css
-│       └── options.js
+│   ├── popup/                      پاپ‌آپ کنترل سریع (html / css / js)
+│   └── options/                    تنظیمات کامل (html / css / js)
 ├── tools/
-│   └── build.mjs                    ساخت بسته‌ی کروم (zip) و فایرفاکس (xpi)
+│   ├── build.mjs                    ساخت بسته‌ی کروم (zip) و فایرفاکس (xpi)
+│   ├── validate.mjs                 بررسی سورس، manifestها، آیکون‌ها، تصاویر
+│   └── make_icons.py                تولید آیکون بدون وابستگی
 └── docs/img/                        تصاویر و اسکرین‌شات‌ها
 ```
 
@@ -182,14 +219,6 @@ Gemini ──WebSocket──▶ PCM 24kHz ──▶ AudioWorklet پخش ──�
 ```
 
 </details>
-
-### ساخت بسته‌ها
-
-```bash
-node tools/build.mjs
-```
-
-خروجی در `dist/` ساخته می‌شود: یک `zip` برای کروم و یک `xpi` برای فایرفاکس، هر دو از همین یک سورس. اسکریپت هیچ وابستگی بیرونی ندارد (فقط `node:zlib`).
 
 ## ⚙️ تنظیمات پیشرفته
 
@@ -216,13 +245,121 @@ node tools/build.mjs
 | **دوبله از ویدیو عقب می‌افتد** | «سقف بافر پخش» را کم کنید (مثلاً ۴۰۰ms) تا بافر مازاد سریع‌تر حذف شود. |
 | **میان‌بر کار نمی‌کند** | ممکن است با میان‌بر برنامه‌ی دیگری تداخل داشته باشد؛ از صفحه‌ی مدیریت میان‌برها تغییرش دهید. |
 
-## 🤝 مشارکت
+## ❓ پرسش‌های پرتکرار
 
-از مشارکت شما استقبال می‌کنیم! لطفاً قبل از ارسال Pull Request یک Issue باز کنید.
+<details>
+<summary><b>رایگان است؟</b></summary>
+
+خود افزونه رایگان و متن‌باز است. اما دوبله از **Gemini Live API** گوگل استفاده می‌کند که
+سهمیه‌ی رایگان محدودی دارد؛ برای استفاده‌ی سنگین باید در Google AI Studio صورتحساب فعال کنید.
+</details>
+
+<details>
+<summary><b>«بدون تأخیر» یعنی صفر میلی‌ثانیه؟</b></summary>
+
+نه. در ترجمه‌ی هم‌زمان، مدل باید کمی از گفتار را بشنود تا بتواند ترجمه کند. تأخیر واقعی
+معمولاً **۱ تا ۳ ثانیه** است. این نزدیک‌ترین چیزی است که امروز در مرورگر شدنی است.
+</details>
+
+<details>
+<summary><b>صدای ویدیو قطع می‌شود، چرا؟</b></summary>
+
+این عمدی است. برای اینکه فقط دوبله شنیده شود، مرورگر صدای تب را به افزونه منحرف می‌کند و
+خودِ صفحه بی‌صدا می‌شود. با اسلایدر «صدای اصلی» می‌توانید موسیقی و افکت پس‌زمینه را زیر
+دوبله برگردانید.
+</details>
+
+<details>
+<summary><b>کلید API من کجا می‌رود؟</b></summary>
+
+فقط در `chrome.storage.local` روی همان دستگاه. تنها مقصد شبکه‌ای
+`generativelanguage.googleapis.com` است. اگر «آدرس رله» را پر کنید، کلید از رله‌ی خودتان
+عبور می‌کند. جزئیات در [SECURITY.md](SECURITY.md).
+</details>
+
+<details>
+<summary><b>روی موبایل کار می‌کند؟</b></summary>
+
+نه. `chrome.tabCapture` و سند offscreen در مرورگرهای موبایل در دسترس نیستند.
+</details>
+
+<details>
+<summary><b>چرا فایرفاکس پنجره‌ی اشتراک‌گذاری باز می‌کند؟</b></summary>
+
+چون فایرفاکس `tabCapture` ندارد. افزونه با `getDisplayMedia` همان کار را می‌کند، ولی این
+API نیازمند انتخاب دستی تب است. یادتان باشد تیک **«اشتراک صدای تب»** را بزنید.
+</details>
+
+<details>
+<summary><b>می‌توانم زبان دیگری جز فارسی را انتخاب کنم؟</b></summary>
+
+بله. در پاپ‌آپ یا تنظیمات، فهرست زبان‌ها را ببینید — بیش از ۲۰ زبان پشتیبانی می‌شود و
+فیلد زبان مقصد قابل ویرایش است، پس هر کد BCP-47 دیگری هم می‌توانید وارد کنید.
+</details>
+
+<details>
+<summary><b>زیرنویس را چطور ذخیره کنم؟</b></summary>
+
+در پاپ‌آپ دکمه‌ی **«ذخیره‌ی زیرنویس»** یک فایل `.txt` با مُهر زمانی دانلود می‌کند.
+با **«پاک کردن»** می‌توانید لاگ را صفر کنید. لاگ در حافظه‌ی موقت است و با شروع دوبله‌ی
+جدید پاک می‌شود.
+</details>
+
+## 🛠️ توسعه و مشارکت
+
+پیش از هر چیز، [CONTRIBUTING.md](CONTRIBUTING.md) را بخوانید. خلاصه‌ی سریع:
+
+```bash
+git clone https://github.com/ArmanAZ44/Avano.git
+cd Avano
+
+node tools/validate.mjs     # بررسی سورس، manifestها، آیکون‌ها و تصاویر README
+node tools/build.mjs        # ساخت dist/Avano-<version>-chrome.zip و -firefox.xpi
+```
+
+نیازمندی: **Node.js 18+**. هیچ وابستگی npm لازم نیست — بسته‌بند ZIP با `node:zlib` نوشته شده.
+
+| دستور | کار |
+|-------|-----|
+| `npm run check` | اعتبارسنجی کامل (`--strict` برای CI) |
+| `npm run build` | ساخت هر دو بسته در `dist/` |
+| `npm test` | همان اعتبارسنجی |
+
+### اسناد پروژه
+
+| سند | محتوا |
+|-----|--------|
+| [CONTRIBUTING.md](CONTRIBUTING.md) | راه‌اندازی محیط، قواعد کد، نسخه‌گذاری |
+| [CHANGELOG.md](CHANGELOG.md) | تاریخچه‌ی نسخه‌ها |
+| [SECURITY.md](SECURITY.md) | مدل امنیتی و گزارش آسیب‌پذیری |
+| [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) | آیین‌نامه‌ی رفتاری |
+
+### یکدست بودن دو مرورگر
+
+هر فایل جدیدی که افزونه لازم دارد باید **در هر دو** `manifest.json` (کروم) و
+`manifest-v2.json` (فایرفاکس) ثبت شود. `tools/validate.mjs` همه‌ی ارجاع‌های manifest را
+بررسی می‌کند تا این اشتباه زودتر گرفته شود. APIهای غایب در فایرفاکس هم در
+`src/shared/browser-api.js` پوش داده می‌شوند.
+
+## 🗺️ نقشه‌ی راه
+
+- [x] دوبله‌ی هم‌زمان با دو حالت ترجمه و دوبله‌ی بیانی
+- [x] پنل شناور، پاپ‌آپ و زیرنویس دوطرفه
+- [x] بسته‌ی کروم (MV3) و فایرفاکس (MV2) از یک سورس
+- [x] خروجی زیرنویس و میان‌برهای صفحه‌کلید
+- [ ] انتشار در Chrome Web Store
+- [ ] امضا و انتشار در addons.mozilla.org
+- [ ] ذخیره‌ی زیرنویس به‌صورت `.srt`
+- [ ] انتخاب بلندگو/صدا در حالت دوبله‌ی بیانی
+- [ ] ترجمه‌ی چندزبانه‌ی هم‌زمان (دو زبان مقصد)
+- [ ] تست خودکار رابط کاربری با Playwright
+
+ایده‌ای دارید؟ [Issue باز کنید](https://github.com/ArmanAZ44/Avano/issues/new/choose).
 
 ## 📜 مجوز
 
-این پروژه تحت مجوز [MIT](LICENSE) منتشر شده است.
+این پروژه تحت مجوز [MIT](LICENSE) منتشر شده است — استفاده، تغییر و توزیع آزاد است،
+فقط نام توسعه‌دهنده و متن مجوز را نگه دارید.
 
 ## 💜 حمایت
 
@@ -358,15 +495,23 @@ Rebind them from `chrome://extensions/shortcuts` (Chrome) or `about:addons` → 
 
 ```
 Avano/
-├── manifest.json                    Chrome MV3
-├── manifest-v2.json                 Firefox MV2
+├── manifest.json                    Chrome / Chromium — Manifest V3
+├── manifest-v2.json                 Firefox — Manifest V2
+├── package.json                     npm scripts (build / check)
+├── LICENSE · CHANGELOG.md · CONTRIBUTING.md · SECURITY.md
+├── .github/
+│   ├── workflows/ci.yml             Validate + build on every push and PR
+│   ├── workflows/release.yml        Build and publish on v* tags
+│   ├── ISSUE_TEMPLATE/              Bug report and feature request forms
+│   └── PULL_REQUEST_TEMPLATE.md
 ├── assets/                          Icons & Vazirmatn font
 ├── src/
 │   ├── shared/
 │   │   ├── config.js               Settings, languages, Gemini message builder
 │   │   └── browser-api.js          Cross-browser polyfill
 │   ├── background/
-│   │   └── service-worker.js       Lifecycle & message routing
+│   │   ├── service-worker.js       Lifecycle, routing, shortcuts, transcript log
+│   │   └── background-firefox.html Firefox MV2 background host
 │   ├── offscreen/
 │   │   ├── offscreen.html          Hidden page for Web Audio
 │   │   ├── offscreen.js            Audio capture, WebSocket, playback engine
@@ -374,16 +519,12 @@ Avano/
 │   ├── content/
 │   │   ├── content.js              Floating panel + subtitles + video control
 │   │   └── content.css             Host element positioning
-│   ├── popup/
-│   │   ├── popup.html              Quick-control popup
-│   │   ├── popup.css
-│   │   └── popup.js
-│   └── options/
-│       ├── options.html            Full settings page
-│       ├── options.css
-│       └── options.js
+│   ├── popup/                      Quick-control popup (html / css / js)
+│   └── options/                    Full settings page (html / css / js)
 ├── tools/
-│   └── build.mjs                   Builds the Chrome zip and the Firefox xpi
+│   ├── build.mjs                   Builds the Chrome zip and the Firefox xpi
+│   ├── validate.mjs                Checks sources, manifests, icons, images
+│   └── make_icons.py               Dependency-free icon generator
 └── docs/img/                        Screenshots & images
 ```
 
@@ -405,14 +546,6 @@ Gemini ──WebSocket──▶ PCM 24kHz ──▶ Playback Worklet ──▶ d
 ```
 
 </details>
-
-### Building the packages
-
-```bash
-node tools/build.mjs
-```
-
-Both `dist/Avano-<version>-chrome.zip` and `dist/Avano-<version>-firefox.xpi` are produced from the same source tree. The script has no external dependencies (only `node:zlib`).
 
 ## ⚙️ Advanced Settings
 
@@ -439,13 +572,120 @@ Both `dist/Avano-<version>-chrome.zip` and `dist/Avano-<version>-firefox.xpi` ar
 | **A shortcut does nothing** | It may clash with another app; rebind it from the browser's shortcut manager. |
 | **High latency** | Select "Maximum Speed" profile and set 16ms capture frame. |
 
-## 🤝 Contributing
+## ❓ FAQ
 
-Contributions are welcome! Please open an Issue before submitting a Pull Request.
+<details>
+<summary><b>Is it free?</b></summary>
+
+The extension itself is free and open source. Dubbing runs on Google's **Gemini Live API**,
+which has a limited free tier — heavy use needs billing enabled in Google AI Studio.
+</details>
+
+<details>
+<summary><b>Does "no delay" mean zero milliseconds?</b></summary>
+
+No. Simultaneous translation needs to hear a bit of speech before it can translate.
+Real-world latency is typically **1–3 seconds**. That is the closest thing achievable in a
+browser today.
+</details>
+
+<details>
+<summary><b>Why does the video's own audio go silent?</b></summary>
+
+By design. To make sure you only hear the dub, the browser redirects the tab's audio into the
+extension and the page itself goes silent. Use the **Original audio** slider to bring music and
+background effects back underneath the dub.
+</details>
+
+<details>
+<summary><b>Where does my API key go?</b></summary>
+
+Only into `chrome.storage.local` on your own machine. The sole network destination is
+`generativelanguage.googleapis.com`. If you set a **relay URL**, your key passes through that
+relay. See [SECURITY.md](SECURITY.md).
+</details>
+
+<details>
+<summary><b>Does it work on mobile?</b></summary>
+
+No. `chrome.tabCapture` and offscreen documents are not available in mobile browsers.
+</details>
+
+<details>
+<summary><b>Why does Firefox open a share dialog?</b></summary>
+
+Because Firefox has no `tabCapture`. Avano uses `getDisplayMedia` instead, which requires
+picking the tab manually. Remember to tick **"Share tab audio"**.
+</details>
+
+<details>
+<summary><b>Can I pick a language other than Persian?</b></summary>
+
+Yes. Open the popup or settings to see the list — over 20 languages are supported, and the
+target-language field is editable, so any valid BCP-47 code works.
+</details>
+
+<details>
+<summary><b>How do I save the subtitles?</b></summary>
+
+The **Save transcript** button in the popup downloads a timestamped `.txt`. Use **Clear** to
+reset the log. It lives in memory only and resets when a new dubbing session starts.
+</details>
+
+## 🛠️ Development
+
+Read [CONTRIBUTING.md](CONTRIBUTING.md) first. The short version:
+
+```bash
+git clone https://github.com/ArmanAZ44/Avano.git
+cd Avano
+
+node tools/validate.mjs     # check sources, manifests, icons and README images
+node tools/build.mjs        # build dist/Avano-<version>-chrome.zip and -firefox.xpi
+```
+
+Requires **Node.js 18+**. There are no npm dependencies — the ZIP writer is built on `node:zlib`.
+
+| Command | What it does |
+|---------|--------------|
+| `npm run check` | Full validation (`--strict` for CI) |
+| `npm run build` | Build both packages into `dist/` |
+| `npm test` | Alias for the validation run |
+
+### Project docs
+
+| Document | Contents |
+|----------|----------|
+| [CONTRIBUTING.md](CONTRIBUTING.md) | Setup, code rules, versioning |
+| [CHANGELOG.md](CHANGELOG.md) | Release history |
+| [SECURITY.md](SECURITY.md) | Security model and vulnerability reporting |
+| [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) | Community guidelines |
+
+### Keeping both browsers in sync
+
+Every file the extension needs must be registered in **both** `manifest.json` (Chrome) and
+`manifest-v2.json` (Firefox). `tools/validate.mjs` resolves every manifest reference so that
+mistake is caught early. APIs Firefox lacks get a shim in `src/shared/browser-api.js`.
+
+## 🗺️ Roadmap
+
+- [x] Real-time dubbing with translation and expressive-dub modes
+- [x] Floating panel, popup and bilingual subtitles
+- [x] Chrome (MV3) and Firefox (MV2) packages from one source
+- [x] Transcript export and keyboard shortcuts
+- [ ] Publish to the Chrome Web Store
+- [ ] Sign and publish on addons.mozilla.org
+- [ ] Export subtitles as `.srt`
+- [ ] Voice/speaker picker for expressive-dub mode
+- [ ] Simultaneous multi-target translation (two output languages)
+- [ ] Automated UI tests with Playwright
+
+Have an idea? [Open an issue](https://github.com/ArmanAZ44/Avano/issues/new/choose).
 
 ## 📜 License
 
-This project is released under the [MIT](LICENSE) License.
+Released under the [MIT](LICENSE) License — free to use, modify and distribute, as long as you
+keep the copyright notice and license text.
 
 ## 💜 Support
 
@@ -459,9 +699,31 @@ If you found this project useful, consider supporting the developer:
 
 ---
 
+## 🙏 Credits | سپاسگزاری
+
+| | |
+|---|---|
+| **موتور صدا و ترجمه** | [Gemini Live API](https://ai.google.dev/gemini-api/docs/live-api) از Google |
+| **فونت** | [Vazirmatn](https://github.com/rastikerdar/vazirmatn) اثر صابر راستی‌کردار — مجوز SIL OFL 1.1 |
+| **آیکون‌ها و نشان** | طراحی اختصاصی پروژه |
+| **بسته‌بندی ZIP** | نوشته‌شده روی `node:zlib` — بدون وابستگی بیرونی |
+
+ساخته و نگه‌داری‌شده توسط [Arman AZ](https://github.com/ArmanAZ44).
+
+---
+
 <p align="center">
-  <strong>Made with <span style="color:#fb7185">♥</span> for the Persian Web</strong><br>
-  <a href="https://t.me/ArmanAZPC">Telegram</a> · 
-  <a href="https://github.com/ArmanAZ44/Avano">GitHub</a> · 
+  <strong>ساخته‌شده با <span style="color:#fb7185">♥</span> برای وب فارسی</strong><br>
+  <strong>Made with <span style="color:#fb7185">♥</span> for the Persian Web</strong>
+</p>
+
+<p align="center">
+  <a href="https://t.me/ArmanAZPC">Telegram</a> ·
+  <a href="https://github.com/ArmanAZ44/Avano">GitHub</a> ·
+  <a href="https://github.com/ArmanAZ44/Avano/issues/new/choose">Issues</a> ·
   <a href="https://reymit.ir/armanaz44">Support</a>
+</p>
+
+<p align="center">
+  <sub>نسخه ۱.۰.۰ · Version 1.0.0 · MIT License</sub>
 </p>
